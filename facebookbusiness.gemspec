@@ -19,7 +19,7 @@
 require './lib/facebook_ads/version'
 
 Gem::Specification.new do |s|
-  s.name        = 'facebookbusiness'
+  s.name        = 'facebookbusiness_14'
   s.version     = FacebookAds::VERSION
   s.summary     = 'Facebook Business API SDK for Ruby (Official)'
   s.description = <<-DESC
