@@ -16,9 +16,9 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-require 'facebook_ads/version'
-require 'facebook_ads/helpers/shortcuts'
-require 'facebook_ads/crash_logger'
+load File.join(__dir__, 'facebook_ads/version.rb')
+require_relative 'facebook_ads/helpers/shortcuts'
+require_relative 'facebook_ads/crash_logger'
 
 module FacebookAds
   DEFAULT_API_VERSION = 'v' + API_VERSION
@@ -43,22 +43,22 @@ module FacebookAds
 
   alias_method :config, :configure
 
-  require 'facebook_ads/ruby2patch'
+  require_relative 'facebook_ads/ruby2patch'
 
-  require 'facebook_ads/config'
-  require 'facebook_ads/errors'
-  require 'facebook_ads/session'
-  require 'facebook_ads/fields'
-  require 'facebook_ads/edge'
-  require 'facebook_ads/param_set'
-  require 'facebook_ads/ad_object'
-  require 'facebook_ads/field_types'
+  require_relative 'facebook_ads/config'
+  require_relative 'facebook_ads/errors'
+  require_relative 'facebook_ads/session'
+  require_relative 'facebook_ads/fields'
+  require_relative 'facebook_ads/edge'
+  require_relative 'facebook_ads/param_set'
+  require_relative 'facebook_ads/ad_object'
+  require_relative 'facebook_ads/field_types'
 
-  require 'facebook_ads/utils/utils'
-  require 'facebook_ads/videos/video_io'
+  require_relative 'facebook_ads/utils/utils'
+  require_relative 'facebook_ads/videos/video_io'
 
-  require 'facebook_ads/batch_api/batch'
-  require 'facebook_ads/batch_api/batch_proxy'
+  require_relative 'facebook_ads/batch_api/batch'
+  require_relative 'facebook_ads/batch_api/batch_proxy'
 
   # Autoload Ad Objects Helpers
   Dir.glob(File.expand_path(File.join(__FILE__, '..', 'facebook_ads', 'ad_objects', 'helpers', '*.rb'))).each do |file|
