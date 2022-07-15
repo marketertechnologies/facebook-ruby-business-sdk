@@ -63,12 +63,14 @@ module FacebookAds
   # Autoload Ad Objects Helpers
   Dir.glob(File.expand_path(File.join(__FILE__, '..', 'facebook_ads', 'ad_objects', 'helpers', '*.rb'))).each do |file|
     class_name = File.basename(file, '.rb').split('_').map(&:capitalize).join.to_sym
+    send(:remove_const, class_name) if const_defined?(class_name)
     autoload class_name, file
   end
 
   # Autoload AdObjects
   Dir.glob(File.expand_path(File.join(__FILE__, '..', 'facebook_ads', 'ad_objects', '*.rb'))).each do |file|
     class_name = File.basename(file, '.rb').split('_').map(&:capitalize).join.to_sym
+    send(:remove_const, class_name) if const_defined?(class_name)
     autoload class_name, file
   end
 
@@ -76,6 +78,7 @@ module FacebookAds
     # Autoload Server-Side API
     Dir.glob(File.expand_path(File.join(__FILE__, '..', 'facebook_ads', 'ad_objects', 'server_side', '*.rb'))).each do |file|
       class_name = File.basename(file, '.rb').split('_').map(&:capitalize).join.to_sym
+      send(:remove_const, class_name) if const_defined?(class_name)
       autoload class_name, file
     end
   end
