@@ -56,6 +56,7 @@ module FacebookAds
       "JPY",
       "KES",
       "KRW",
+      "LKR",
       "MOP",
       "MXN",
       "MYR",
@@ -70,7 +71,6 @@ module FacebookAds
       "PYG",
       "QAR",
       "RON",
-      "RUB",
       "SAR",
       "SEK",
       "SGD",
@@ -286,6 +286,7 @@ module FacebookAds
         api.has_param :object_story_spec, 'AdCreativeObjectStorySpec'
         api.has_param :object_type, 'string'
         api.has_param :object_url, 'string'
+        api.has_param :omnichannel_link_spec, 'hash'
         api.has_param :place_page_set_id, 'string'
         api.has_param :platform_customizations, 'object'
         api.has_param :playable_asset_id, 'string'
@@ -336,8 +337,8 @@ module FacebookAds
     end
 
     has_edge :adplayables do |edge|
-      edge.get
-      edge.post do |api|
+      edge.get 'PlayableContent'
+      edge.post 'PlayableContent' do |api|
         api.has_param :app_id, 'string'
         api.has_param :name, 'string'
         api.has_param :session_id, 'string'
@@ -439,6 +440,8 @@ module FacebookAds
         api.has_param :daily_spend_cap, 'int'
         api.has_param :date_format, 'string'
         api.has_param :destination_type, { enum: -> { AdSet::DESTINATION_TYPE }}
+        api.has_param :dsa_beneficiary, 'string'
+        api.has_param :dsa_payor, 'string'
         api.has_param :end_time, 'datetime'
         api.has_param :execution_options, { list: { enum: -> { AdSet::EXECUTION_OPTIONS }} }
         api.has_param :existing_customer_budget_percentage, 'int'
@@ -483,7 +486,7 @@ module FacebookAds
       edge.get 'AdsPixel' do |api|
         api.has_param :sort_by, { enum: -> { AdsPixel::SORT_BY }}
       end
-      edge.post do |api|
+      edge.post 'AdsPixel' do |api|
         api.has_param :name, 'string'
       end
     end
@@ -563,7 +566,6 @@ module FacebookAds
         api.has_param :react_mode_metadata, 'string'
         api.has_param :referenced_sticker_id, 'string'
         api.has_param :replace_video_id, 'string'
-        api.has_param :sales_promo_id, 'int'
         api.has_param :slideshow_spec, 'hash'
         api.has_param :source, 'file'
         api.has_param :source_instagram_media_id, 'string'
@@ -651,12 +653,6 @@ module FacebookAds
     has_edge :broadtargetingcategories do |edge|
       edge.get 'BroadTargetingCategories' do |api|
         api.has_param :custom_categories_only, 'bool'
-      end
-    end
-
-    has_edge :businessprojects do |edge|
-      edge.get do |api|
-        api.has_param :business, 'string'
       end
     end
 
@@ -1015,6 +1011,7 @@ module FacebookAds
         api.has_param :is_reserved_buying, 'bool'
         api.has_param :num_curve_points, 'int'
         api.has_param :objective, 'string'
+        api.has_param :optimization_goal, 'string'
         api.has_param :prediction_mode, 'int'
         api.has_param :reach, 'int'
         api.has_param :rf_prediction_id, 'string'
@@ -1065,6 +1062,7 @@ module FacebookAds
         api.has_param :countries, { list: 'string' }
         api.has_param :is_exclusion, 'bool'
         api.has_param :limit_type, { enum: -> { AdAccountTargetingUnified::LIMIT_TYPE }}
+        api.has_param :locale, 'string'
         api.has_param :objective, { enum: -> { AdAccountTargetingUnified::OBJECTIVE }}
         api.has_param :promoted_object, 'object'
         api.has_param :q, 'string'

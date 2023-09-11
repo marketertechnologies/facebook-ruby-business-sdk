@@ -19,6 +19,8 @@
 load File.join(__dir__, 'facebook_ads/version.rb')
 require_relative 'facebook_ads/helpers/shortcuts'
 require_relative 'facebook_ads/crash_logger'
+require 'faraday'
+require 'faraday/multipart'
 
 module FacebookAds
   DEFAULT_API_VERSION = 'v' + API_VERSION
