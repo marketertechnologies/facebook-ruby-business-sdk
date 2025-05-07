@@ -104,6 +104,7 @@ module FacebookAds
     SPECIAL_AD_CATEGORIES = [
       "CREDIT",
       "EMPLOYMENT",
+      "FINANCIAL_PRODUCTS_SERVICES",
       "HOUSING",
       "ISSUES_ELECTIONS_POLITICS",
       "NONE",
@@ -372,6 +373,7 @@ module FacebookAds
     SPECIAL_AD_CATEGORY = [
       "CREDIT",
       "EMPLOYMENT",
+      "FINANCIAL_PRODUCTS_SERVICES",
       "HOUSING",
       "ISSUES_ELECTIONS_POLITICS",
       "NONE",
@@ -387,6 +389,7 @@ module FacebookAds
 
     field :account_id, 'string'
     field :adlabels, { list: 'AdLabel' }
+    field :advantage_state_info, 'AdCampaignGroupAdvantageState'
     field :bid_strategy, { enum: -> { BID_STRATEGY }}
     field :boosted_object_id, 'string'
     field :brand_lift_studies, { list: 'AdStudy' }
@@ -416,6 +419,7 @@ module FacebookAds
     field :smart_promotion_type, 'string'
     field :source_campaign, 'Campaign'
     field :source_campaign_id, 'string'
+    field :source_recommendation_type, 'string'
     field :special_ad_categories, { list: 'string' }
     field :special_ad_category, 'string'
     field :special_ad_category_country, { list: 'string' }

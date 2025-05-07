@@ -15,8 +15,11 @@ module FacebookAds
 
   class IgMediaForIgOnlyApi < AdObject
 
+    field :alt_text, 'string'
     field :caption, 'string'
+    field :comments_count, 'int'
     field :id, 'string'
+    field :is_comment_enabled, 'bool'
     field :is_shared_to_feed, 'bool'
     field :like_count, 'int'
     field :media_product_type, 'string'
@@ -28,11 +31,25 @@ module FacebookAds
     field :thumbnail_url, 'string'
     field :timestamp, 'datetime'
     field :username, 'string'
-    has_no_post
     has_no_delete
 
     has_edge :children do |edge|
       edge.get
+    end
+
+    has_edge :comments do |edge|
+      edge.get 'Comment'
+      edge.post do |api|
+        api.has_param :message, 'string'
+      end
+    end
+
+    has_edge :insights do |edge|
+      edge.get 'InsightsResult' do |api|
+        api.has_param :breakdown, { list: { enum: -> { InsightsResult::BREAKDOWN }} }
+        api.has_param :metric, { list: { enum: -> { InsightsResult::METRIC }} }
+        api.has_param :period, { list: { enum: -> { InsightsResult::PERIOD }} }
+      end
     end
 
   end

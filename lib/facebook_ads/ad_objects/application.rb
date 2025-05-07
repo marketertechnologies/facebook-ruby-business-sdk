@@ -65,17 +65,6 @@ module FacebookAds
       "EYMT",
     ]
 
-    LOGGING_SOURCE = [
-      "DETECTION",
-      "MESSENGER_BOT",
-    ]
-
-    LOGGING_TARGET = [
-      "APP",
-      "APP_AND_PAGE",
-      "PAGE",
-    ]
-
     OWNER_PERMISSIONS = [
       "DEVELOP",
       "MANAGE",
@@ -146,6 +135,7 @@ module FacebookAds
     field :deauth_callback_url, 'string'
     field :default_share_mode, 'string'
     field :description, 'string'
+    field :enigma_config, 'object'
     field :financial_id, 'string'
     field :gdpv4_chrome_custom_tabs_enabled, 'bool'
     field :gdpv4_enabled, 'bool'
@@ -237,6 +227,8 @@ module FacebookAds
         api.has_param :app_user_id, 'string'
         api.has_param :application_tracking_enabled, 'bool'
         api.has_param :attribution, 'string'
+        api.has_param :attribution_referrer, 'string'
+        api.has_param :attribution_sources, { list: 'hash' }
         api.has_param :auto_publish, 'bool'
         api.has_param :bundle_id, 'string'
         api.has_param :bundle_short_version, 'string'
@@ -251,14 +243,20 @@ module FacebookAds
         api.has_param :data_processing_options_state, 'int'
         api.has_param :device_token, 'string'
         api.has_param :event, { enum: %w{CUSTOM_APP_EVENTS DEFERRED_APP_LINK MOBILE_APP_INSTALL }}
+        api.has_param :event_id, 'string'
         api.has_param :extinfo, 'object'
+        api.has_param :google_install_referrer, 'string'
         api.has_param :include_dwell_data, 'bool'
         api.has_param :include_video_data, 'bool'
+        api.has_param :install_id, 'string'
         api.has_param :install_referrer, 'string'
         api.has_param :install_timestamp, 'int'
         api.has_param :installer_package, 'string'
+        api.has_param :is_fb, 'bool'
         api.has_param :limited_data_use, 'bool'
+        api.has_param :meta_install_referrer, 'string'
         api.has_param :migration_bundle, 'string'
+        api.has_param :operational_parameters, { list: 'hash' }
         api.has_param :page_id, 'int'
         api.has_param :page_scoped_user_id, 'int'
         api.has_param :receipt_data, 'string'
@@ -291,6 +289,7 @@ module FacebookAds
         api.has_param :metrics, { list: { enum: -> { AdNetworkAnalyticsSyncQueryResult::METRICS }} }
         api.has_param :ordering_column, { enum: -> { AdNetworkAnalyticsSyncQueryResult::ORDERING_COLUMN }}
         api.has_param :ordering_type, { enum: -> { AdNetworkAnalyticsSyncQueryResult::ORDERING_TYPE }}
+        api.has_param :should_include_until, 'bool'
         api.has_param :since, 'datetime'
         api.has_param :until, 'datetime'
       end
@@ -471,22 +470,37 @@ module FacebookAds
       edge.get 'AdsDataset'
     end
 
+    has_edge :message_templates do |edge|
+      edge.get do |api|
+        api.has_param :template_id, 'string'
+      end
+    end
+
     has_edge :mmp_auditing do |edge|
       edge.post do |api|
         api.has_param :advertiser_id, 'string'
         api.has_param :attribution, 'string'
+        api.has_param :attribution_method, 'string'
         api.has_param :attribution_model, 'string'
+        api.has_param :attribution_referrer, 'string'
         api.has_param :auditing_token, 'string'
         api.has_param :click_attr_window, 'int'
         api.has_param :custom_events, { list: 'object' }
         api.has_param :decline_reason, 'string'
+        api.has_param :device_os, 'string'
         api.has_param :engagement_type, 'string'
         api.has_param :event, 'string'
+        api.has_param :event_id, 'string'
         api.has_param :event_reported_time, 'int'
         api.has_param :fb_ad_id, 'int'
+        api.has_param :fb_adgroup_id, 'int'
         api.has_param :fb_click_time, 'int'
         api.has_param :fb_view_time, 'int'
+        api.has_param :google_install_referrer, 'string'
+        api.has_param :inactivity_window_hours, 'int'
+        api.has_param :install_id, 'string'
         api.has_param :is_fb, 'bool'
+        api.has_param :meta_install_referrer, 'string'
         api.has_param :used_install_referrer, 'bool'
         api.has_param :view_attr_window, 'int'
       end
@@ -522,24 +536,6 @@ module FacebookAds
       edge.post do |api|
         api.has_param :flash, 'bool'
         api.has_param :unity, 'bool'
-      end
-    end
-
-    has_edge :page_activities do |edge|
-      edge.post 'Application' do |api|
-        api.has_param :advertiser_tracking_enabled, 'bool'
-        api.has_param :application_tracking_enabled, 'bool'
-        api.has_param :custom_events, { list: 'object' }
-        api.has_param :logging_source, { enum: -> { Application::LOGGING_SOURCE }}
-        api.has_param :logging_target, { enum: -> { Application::LOGGING_TARGET }}
-        api.has_param :page_id, 'int'
-        api.has_param :page_scoped_user_id, 'int'
-      end
-    end
-
-    has_edge :payment_currencies do |edge|
-      edge.post 'Application' do |api|
-        api.has_param :currency_url, 'string'
       end
     end
 
@@ -592,6 +588,7 @@ module FacebookAds
         api.has_param :fields, { list: 'string' }
         api.has_param :object, 'string'
       end
+      edge.get
       edge.post do |api|
         api.has_param :callback_url, 'string'
         api.has_param :fields, { list: 'string' }

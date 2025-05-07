@@ -15,8 +15,16 @@ module FacebookAds
 
   class RegionalRegulationIdentities < AdObject
 
+    field :australia_finserv_beneficiary, 'string'
+    field :australia_finserv_payer, 'string'
+    field :india_finserv_beneficiary, 'string'
+    field :india_finserv_payer, 'string'
+    field :singapore_universal_beneficiary, 'string'
+    field :singapore_universal_payer, 'string'
     field :taiwan_finserv_beneficiary, 'string'
     field :taiwan_finserv_payer, 'string'
+    field :taiwan_universal_beneficiary, 'string'
+    field :taiwan_universal_payer, 'string'
     has_no_id
     has_no_get
     has_no_post

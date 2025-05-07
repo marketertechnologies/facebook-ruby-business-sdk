@@ -15,9 +15,6 @@ module FacebookAds
 
   class AnalyticsQueryResult < AdObject
 
-    field :columns, 'object'
-    field :datapoints, { list: 'object' }
-    field :error, 'object'
     field :query_id, 'string'
     field :status, 'string'
     has_no_id

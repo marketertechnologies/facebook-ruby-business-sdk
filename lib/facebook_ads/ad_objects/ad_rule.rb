@@ -37,6 +37,7 @@ module FacebookAds
       "AM_SYD_RESOLUTION_FLOW",
       "AM_SYD_RESOLUTION_FLOW_MODAL",
       "AM_TABLE_DELIVERY_COLUMN_POPOVER",
+      "AM_TABLE_MORE_RULES_DROPDOWN",
       "AM_TABLE_TOGGLE_POPOVER",
       "AM_TOOLBAR_CREATE_RULE_DROPDOWN",
       "PE_CAMPAIGN_STRUCTURE_MENU",
@@ -57,6 +58,7 @@ module FacebookAds
     field :account_id, 'string'
     field :created_by, 'User'
     field :created_time, 'datetime'
+    field :disable_error_code, 'int'
     field :evaluation_spec, 'AdRuleEvaluationSpec'
     field :execution_spec, 'AdRuleExecutionSpec'
     field :id, 'string'
