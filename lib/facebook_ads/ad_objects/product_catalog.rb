@@ -108,6 +108,7 @@ module FacebookAds
     field :user_access_expire_time, 'datetime'
     field :vertical, 'string'
     field :additional_vertical_option, { enum: -> { ADDITIONAL_VERTICAL_OPTION }}
+    field :business_metadata, 'hash'
     field :catalog_segment_filter, 'object'
     field :catalog_segment_product_set_id, 'string'
     field :destination_catalog_settings, 'hash'
@@ -124,7 +125,7 @@ module FacebookAds
         api.has_param :business, 'string'
         api.has_param :permitted_roles, { list: { enum: -> { ProductCatalog::PERMITTED_ROLES }} }
         api.has_param :permitted_tasks, { list: { enum: -> { ProductCatalog::PERMITTED_TASKS }} }
-        api.has_param :skip_default_utms, 'bool'
+        api.has_param :skip_defaults, 'bool'
         api.has_param :utm_settings, 'hash'
       end
     end
@@ -329,6 +330,12 @@ module FacebookAds
       end
     end
 
+    has_edge :marketplace_partner_sellers_details do |edge|
+      edge.post 'ProductCatalog' do |api|
+        api.has_param :requests, 'hash'
+      end
+    end
+
     has_edge :pricing_variables_batch do |edge|
       edge.get 'ProductCatalogPricingVariablesBatch' do |api|
         api.has_param :handle, 'string'
@@ -409,7 +416,6 @@ module FacebookAds
       end
       edge.post 'ProductItem' do |api|
         api.has_param :additional_image_urls, { list: 'string' }
-        api.has_param :additional_uploaded_image_ids, { list: 'string' }
         api.has_param :additional_variant_attributes, 'hash'
         api.has_param :android_app_name, 'string'
         api.has_param :android_class, 'string'
@@ -464,6 +470,11 @@ module FacebookAds
         api.has_param :origin_country, { enum: -> { ProductItem::ORIGIN_COUNTRY }}
         api.has_param :pattern, 'string'
         api.has_param :price, 'int'
+        api.has_param :product_priority_0, 'double'
+        api.has_param :product_priority_1, 'double'
+        api.has_param :product_priority_2, 'double'
+        api.has_param :product_priority_3, 'double'
+        api.has_param :product_priority_4, 'double'
         api.has_param :product_type, 'string'
         api.has_param :quantity_to_sell_on_facebook, 'int'
         api.has_param :retailer_id, 'string'
@@ -528,6 +539,10 @@ module FacebookAds
         api.has_param :vin, 'string'
         api.has_param :year, 'int'
       end
+    end
+
+    has_edge :version_configs do |edge|
+      edge.get 'CatalogContentVersionConfig'
     end
 
     has_edge :version_items_batch do |edge|

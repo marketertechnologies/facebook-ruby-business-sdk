@@ -100,6 +100,7 @@ module FacebookAds
     field :instream_packages, { list: 'string' }
     field :interval_frequency_cap, 'int'
     field :interval_frequency_cap_reset_period, 'int'
+    field :is_balanced_frequency, 'bool'
     field :is_bonus_media, 'int'
     field :is_conversion_goal, 'int'
     field :is_higher_average_frequency, 'bool'
@@ -114,6 +115,7 @@ module FacebookAds
     field :optimization_goal, 'int'
     field :optimization_goal_name, 'string'
     field :pause_periods, { list: 'object' }
+    field :percent_reach_at_target_frequency, 'int'
     field :placement_breakdown, 'ReachFrequencyEstimatesPlacementBreakdown'
     field :placement_breakdown_map, { list: 'map<unsigned int, ReachFrequencyEstimatesPlacementBreakdown>' }
     field :plan_name, 'string'
@@ -126,6 +128,8 @@ module FacebookAds
     field :status, 'int'
     field :story_event_type, 'int'
     field :target_cpm, 'int'
+    field :target_frequency, 'int'
+    field :target_frequency_reset_period, 'int'
     field :target_spec, 'Targeting'
     field :time_created, 'datetime'
     field :time_updated, 'datetime'

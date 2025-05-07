@@ -34,6 +34,14 @@ module FacebookAds
       "preorder",
     ]
 
+    CAPABILITY_TO_REVIEW_STATUS = [
+      "APPROVED",
+      "NO_REVIEW",
+      "OUTDATED",
+      "PENDING",
+      "REJECTED",
+    ]
+
     CONDITION = [
       "cpo",
       "new",
@@ -313,6 +321,7 @@ module FacebookAds
       "BAD_QUALITY_IMAGE",
       "BIG_CATALOG_WITH_ALL_ITEMS_IN_STOCK",
       "BIZ_MSG_AI_AGENT_DISABLED_BY_USER",
+      "BIZ_MSG_GEN_AI_POLICY_VIOLATED",
       "CANNOT_EDIT_SUBSCRIPTION_PRODUCTS",
       "CATALOG_NOT_CONNECTED_TO_EVENT_SOURCE",
       "CHECKOUT_DISABLED_BY_USER",
@@ -368,6 +377,7 @@ module FacebookAds
       "INVALID_SUBSCRIPTION_DISABLE_PARAMS",
       "INVALID_SUBSCRIPTION_ENABLE_PARAMS",
       "INVALID_SUBSCRIPTION_PARAMS",
+      "INVALID_TAX_EXTENSION_STATE",
       "INVALID_VEHICLE_STATE",
       "INVALID_VIRTUAL_TOUR_URL_DOMAIN",
       "INVENTORY_ZERO_AVAILABILITY_IN_STOCK",
@@ -380,6 +390,14 @@ module FacebookAds
       "ITEM_PRICE_NOT_POSITIVE",
       "ITEM_STALE_OUT_OF_STOCK",
       "MARKETPLACE_DISABLED_BY_USER",
+      "MARKETPLACE_PARTNER_AUCTION_NO_BID_CLOSE_TIME",
+      "MARKETPLACE_PARTNER_LISTING_LIMIT_EXCEEDED",
+      "MARKETPLACE_PARTNER_NOT_LOCAL_ITEM",
+      "MARKETPLACE_PARTNER_NOT_SHIPPED_ITEM",
+      "MARKETPLACE_PARTNER_POLICY_VIOLATION",
+      "MARKETPLACE_PARTNER_RULE_LISTING_LIMIT_EXCEEDED",
+      "MARKETPLACE_PARTNER_SELLER_BANNED",
+      "MARKETPLACE_PARTNER_SELLER_NOT_VALID",
       "MINI_SHOPS_DISABLED_BY_USER",
       "MISSING_CHECKOUT",
       "MISSING_CHECKOUT_CURRENCY",
@@ -445,6 +463,8 @@ module FacebookAds
       "VIDEO_FETCH_FAILED_TIMED_OUT",
       "VIDEO_NOT_DOWNLOADABLE",
       "WHATSAPP_DISABLED_BY_USER",
+      "WHATSAPP_MARKETING_MESSAGE_DISABLED_BY_USER",
+      "WHATSAPP_MARKETING_MESSAGE_POLICY_VIOLATION",
       "WHATSAPP_POLICY_VIOLATION",
     ]
 
@@ -721,6 +741,8 @@ module FacebookAds
     field :applinks, 'CatalogItemAppLinks'
     field :availability, { enum: -> { AVAILABILITY }}
     field :brand, 'string'
+    field :bundle_items, { list: 'string' }
+    field :bundle_retailer_ids, { list: 'string' }
     field :capability_to_review_status, { list: 'hash' }
     field :category, 'string'
     field :category_specific_fields, 'CatalogSubVerticalList'
@@ -754,6 +776,7 @@ module FacebookAds
     field :importer_name, 'string'
     field :invalidation_errors, { list: 'ProductItemInvalidationError' }
     field :inventory, 'int'
+    field :is_bundle_hero, 'bool'
     field :manufacturer_info, 'string'
     field :manufacturer_part_number, 'string'
     field :marked_for_product_launch, 'string'
@@ -770,6 +793,7 @@ module FacebookAds
     field :product_feed, 'ProductFeed'
     field :product_group, 'ProductGroup'
     field :product_local_info, 'ProductItemLocalInfo'
+    field :product_relationship, 'string'
     field :product_type, 'string'
     field :quantity_to_sell_on_facebook, 'int'
     field :retailer_id, 'string'
@@ -786,10 +810,10 @@ module FacebookAds
     field :start_date, 'string'
     field :tags, { list: 'string' }
     field :url, 'string'
+    field :vendor_id, 'string'
     field :video_fetch_status, { enum: -> { VIDEO_FETCH_STATUS }}
     field :visibility, { enum: -> { VISIBILITY }}
     field :wa_compliance_category, 'string'
-    field :additional_uploaded_image_ids, { list: 'string' }
     field :android_app_name, 'string'
     field :android_class, 'string'
     field :android_package, 'string'
@@ -806,6 +830,11 @@ module FacebookAds
     field :iphone_app_store_id, 'int'
     field :iphone_url, 'string'
     field :launch_date, 'string'
+    field :product_priority_0, 'double'
+    field :product_priority_1, 'double'
+    field :product_priority_2, 'double'
+    field :product_priority_3, 'double'
+    field :product_priority_4, 'double'
     field :return_policy_days, 'int'
     field :windows_phone_app_id, 'string'
     field :windows_phone_app_name, 'string'
@@ -813,6 +842,13 @@ module FacebookAds
 
     has_edge :channels_to_integrity_status do |edge|
       edge.get 'CatalogItemChannelsToIntegrityStatus'
+    end
+
+    has_edge :override_details do |edge|
+      edge.get 'OverrideDetails' do |api|
+        api.has_param :keys, { list: 'string' }
+        api.has_param :type, { enum: -> { OverrideDetails::TYPE }}
+      end
     end
 
     has_edge :product_sets do |edge|

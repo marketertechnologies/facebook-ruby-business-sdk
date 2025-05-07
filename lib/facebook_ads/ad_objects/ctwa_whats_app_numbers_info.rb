@@ -18,7 +18,9 @@ module FacebookAds
     field :can_manage_wa_flows, 'bool'
     field :formatted_whatsapp_number, 'string'
     field :is_business_number, 'bool'
+    field :number_country_prefix, 'string'
     field :page_whatsapp_number_id, 'string'
+    field :waba_id, 'string'
     field :whatsapp_number, 'string'
     field :whatsapp_smb_device, 'string'
     has_no_id

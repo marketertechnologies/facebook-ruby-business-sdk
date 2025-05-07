@@ -14,6 +14,19 @@ module FacebookAds
   # pull request for this class.
 
   class Business < AdObject
+    VERIFICATION_STATUS = [
+      "expired",
+      "failed",
+      "ineligible",
+      "not_verified",
+      "pending",
+      "pending_need_more_info",
+      "pending_submission",
+      "rejected",
+      "revoked",
+      "verified",
+    ]
+
     TWO_FACTOR_TYPE = [
       "admin_required",
       "all_required",
@@ -51,6 +64,7 @@ module FacebookAds
       "ANALYZE",
       "CASHIER_ROLE",
       "CREATE_CONTENT",
+      "GLOBAL_STRUCTURE_MANAGEMENT",
       "MANAGE",
       "MANAGE_JOBS",
       "MANAGE_LEADS",
@@ -570,6 +584,7 @@ module FacebookAds
       "ANALYZE",
       "CASHIER_ROLE",
       "CREATE_CONTENT",
+      "GLOBAL_STRUCTURE_MANAGEMENT",
       "MANAGE",
       "MANAGE_JOBS",
       "MANAGE_LEADS",
@@ -591,6 +606,38 @@ module FacebookAds
       "PROFILE_PLUS_REVENUE",
       "READ_PAGE_MAILBOXES",
       "VIEW_MONETIZATION_INSIGHTS",
+    ]
+
+    BUSINESS_VERTICAL = [
+      "ADULT_PRODUCTS_AND_SERVICES",
+      "ALCOHOL_AND_TOBACCO",
+      "AUTOMOTIVE_DEALERS",
+      "BODY_PARTS_FLUIDS",
+      "BUSINESS_AND_UTILITY",
+      "CONTENT_AND_APPS",
+      "CREATORS_AND_CELEBRITIES",
+      "DATING",
+      "DRUGS",
+      "ENDANGERED_SPECIES",
+      "FIREARMS",
+      "FRAUDULENT_MISLEADING_OFFENSIVE",
+      "GAMBLING",
+      "GROCERY_AND_CONVENIENCE_STORE",
+      "HAZARDOUS_GOODS_AND_MATERIALS",
+      "HOME",
+      "HOME_AND_AUTO_MANUFACTURING",
+      "LIFESTYLE",
+      "LIVE_NON_ENDANGERED_SPECIES",
+      "LOANS_DEBT_COLLECTION_BAIL_BONDS",
+      "LOCAL_EVENTS",
+      "MEDICAL_HEALTHCARE",
+      "MULTILEVEL_MARKETING",
+      "NON_PROFIT_AND_RELIGIOUS_ORGS",
+      "PROFESSIONAL",
+      "REAL_VIRTUAL_FAKE_CURRENCY",
+      "RESTAURANTS",
+      "RETAIL",
+      "TRANSPORTATION_AND_ACCOMMODATION",
     ]
 
     SUBVERTICAL_V2 = [
@@ -818,7 +865,7 @@ module FacebookAds
     field :updated_by, 'object'
     field :updated_time, 'datetime'
     field :user_access_expire_time, 'datetime'
-    field :verification_status, 'string'
+    field :verification_status, { enum: -> { VERIFICATION_STATUS }}
     field :vertical, 'string'
     field :vertical_id, 'int'
     has_no_delete
@@ -832,9 +879,23 @@ module FacebookAds
       end
     end
 
+    has_edge :ad_account_infos do |edge|
+      edge.get 'AlmAdAccountInfo' do |api|
+        api.has_param :ad_account_id, 'string'
+        api.has_param :parent_advertiser_id, 'string'
+        api.has_param :user_id, 'string'
+      end
+    end
+
     has_edge :ad_accounts do |edge|
       edge.delete do |api|
         api.has_param :adaccount_id, 'string'
+      end
+    end
+
+    has_edge :ad_review_requests do |edge|
+      edge.post do |api|
+        api.has_param :ad_account_ids, { list: 'string' }
       end
     end
 
@@ -895,6 +956,7 @@ module FacebookAds
         api.has_param :metrics, { list: { enum: -> { AdNetworkAnalyticsSyncQueryResult::METRICS }} }
         api.has_param :ordering_column, { enum: -> { AdNetworkAnalyticsSyncQueryResult::ORDERING_COLUMN }}
         api.has_param :ordering_type, { enum: -> { AdNetworkAnalyticsSyncQueryResult::ORDERING_TYPE }}
+        api.has_param :should_include_until, 'bool'
         api.has_param :since, 'datetime'
         api.has_param :until, 'datetime'
       end
@@ -914,6 +976,15 @@ module FacebookAds
     has_edge :adnetworkanalytics_results do |edge|
       edge.get 'AdNetworkAnalyticsAsyncQueryResult' do |api|
         api.has_param :query_ids, { list: 'string' }
+      end
+    end
+
+    has_edge :ads_dataset do |edge|
+      edge.post 'Business' do |api|
+        api.has_param :ad_account_id, 'string'
+        api.has_param :app_id, 'string'
+        api.has_param :is_crm, 'bool'
+        api.has_param :name, 'string'
       end
     end
 
@@ -956,6 +1027,12 @@ module FacebookAds
       end
     end
 
+    has_edge :bm_review_requests do |edge|
+      edge.post do |api|
+        api.has_param :business_manager_ids, { list: 'string' }
+      end
+    end
+
     has_edge :business_asset_groups do |edge|
       edge.get 'BusinessAssetGroup'
     end
@@ -976,6 +1053,7 @@ module FacebookAds
       edge.get 'BusinessUser'
       edge.post 'BusinessUser' do |api|
         api.has_param :email, 'string'
+        api.has_param :invited_user_type, { list: { enum: -> { BusinessUser::INVITED_USER_TYPE }} }
         api.has_param :role, { enum: -> { BusinessUser::ROLE }}
       end
     end
@@ -1097,12 +1175,6 @@ module FacebookAds
       end
     end
 
-    has_edge :draft_negative_keyword_lists do |edge|
-      edge.post do |api|
-        api.has_param :negative_keyword_list_file, 'file'
-      end
-    end
-
     has_edge :event_source_groups do |edge|
       edge.get 'EventSourceGroup'
       edge.post 'EventSourceGroup' do |api|
@@ -1210,20 +1282,27 @@ module FacebookAds
       end
     end
 
-    has_edge :negative_keyword_lists do |edge|
-      edge.get 'NegativeKeywordList'
+    has_edge :onboard_partners_to_mm_lite do |edge|
+      edge.post do |api|
+        api.has_param :solution_id, 'string'
+      end
     end
 
     has_edge :openbridge_configurations do |edge|
       edge.get 'OpenBridgeConfiguration'
       edge.post 'OpenBridgeConfiguration' do |api|
         api.has_param :active, 'bool'
+        api.has_param :cloud_provider, 'string'
+        api.has_param :cloud_region, 'string'
+        api.has_param :destination_id, 'string'
         api.has_param :endpoint, 'string'
         api.has_param :fallback_domain, 'string'
-        api.has_param :fallback_domain_enabled, 'bool'
+        api.has_param :first_party_domain, 'string'
         api.has_param :host_business_id, 'int'
-        api.has_param :host_external_id, 'string'
         api.has_param :instance_id, 'string'
+        api.has_param :instance_version, 'string'
+        api.has_param :is_sgw_instance, 'bool'
+        api.has_param :partner_name, 'string'
         api.has_param :pixel_id, 'int'
       end
     end
@@ -1292,6 +1371,7 @@ module FacebookAds
       edge.get 'ProductCatalog'
       edge.post 'ProductCatalog' do |api|
         api.has_param :additional_vertical_option, { enum: -> { ProductCatalog::ADDITIONAL_VERTICAL_OPTION }}
+        api.has_param :business_metadata, 'hash'
         api.has_param :catalog_segment_filter, 'object'
         api.has_param :catalog_segment_product_set_id, 'string'
         api.has_param :da_display_settings, 'object'
@@ -1328,6 +1408,10 @@ module FacebookAds
         api.has_param :retailer_custom_audience_config, 'hash'
         api.has_param :vendor_id, 'string'
       end
+    end
+
+    has_edge :passback_attribution_metadata_configs do |edge|
+      edge.get
     end
 
     has_edge :pending_client_ad_accounts do |edge|
@@ -1397,6 +1481,20 @@ module FacebookAds
       end
     end
 
+    has_edge :self_certify_whatsapp_business do |edge|
+      edge.post 'Business' do |api|
+        api.has_param :average_monthly_revenue_spend_with_partner, 'hash'
+        api.has_param :business_documents, { list: 'file' }
+        api.has_param :business_vertical, { enum: -> { Business::BUSINESS_VERTICAL }}
+        api.has_param :end_business_address, 'hash'
+        api.has_param :end_business_id, 'string'
+        api.has_param :end_business_legal_name, 'string'
+        api.has_param :end_business_trade_names, { list: 'string' }
+        api.has_param :end_business_website, 'string'
+        api.has_param :num_billing_cycles_with_partner, 'int'
+      end
+    end
+
     has_edge :setup_managed_partner_adaccounts do |edge|
       edge.post 'Business' do |api|
         api.has_param :credit_line_id, 'string'
@@ -1444,7 +1542,6 @@ module FacebookAds
     has_edge :videos do |edge|
       edge.post 'AdVideo' do |api|
         api.has_param :ad_placements_validation_only, 'bool'
-        api.has_param :animated_effect_id, 'int'
         api.has_param :application_id, 'string'
         api.has_param :asked_fun_fact_prompt_id, 'int'
         api.has_param :audio_story_wave_animation_handle, 'string'
@@ -1470,11 +1567,10 @@ module FacebookAds
         api.has_param :formatting, { enum: -> { AdVideo::FORMATTING }}
         api.has_param :fov, 'int'
         api.has_param :front_z_rotation, 'double'
-        api.has_param :fun_fact_prompt_id, 'int'
+        api.has_param :fun_fact_prompt_id, 'string'
         api.has_param :fun_fact_toastee_id, 'int'
         api.has_param :guide, { list: { list: 'int' } }
         api.has_param :guide_enabled, 'bool'
-        api.has_param :holiday_card, 'string'
         api.has_param :initial_heading, 'int'
         api.has_param :initial_pitch, 'int'
         api.has_param :instant_game_entry_point_data, 'string'
@@ -1482,7 +1578,6 @@ module FacebookAds
         api.has_param :is_group_linking_post, 'bool'
         api.has_param :is_voice_clip, 'bool'
         api.has_param :location_source_id, 'string'
-        api.has_param :offer_like_post_id, 'int'
         api.has_param :og_action_type_id, 'string'
         api.has_param :og_icon_id, 'string'
         api.has_param :og_object_id, 'string'
@@ -1500,7 +1595,6 @@ module FacebookAds
         api.has_param :start_offset, 'int'
         api.has_param :swap_mode, { enum: -> { AdVideo::SWAP_MODE }}
         api.has_param :text_format_metadata, 'string'
-        api.has_param :throwback_camera_roll_media, 'string'
         api.has_param :thumb, 'file'
         api.has_param :time_since_original_post, 'int'
         api.has_param :title, 'string'

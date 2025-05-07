@@ -17,6 +17,7 @@ module FacebookAds
     EXECUTION_TYPE = [
       "ADD_INTEREST_RELAXATION",
       "ADD_QUESTIONNAIRE_INTERESTS",
+      "AD_RECOMMENDATION_APPLY",
       "AUDIENCE_CONSOLIDATION",
       "AUDIENCE_CONSOLIDATION_ASK_FIRST",
       "CHANGE_BID",
@@ -38,6 +39,7 @@ module FacebookAds
 
     field :execution_options, { list: 'AdRuleExecutionOptions' }
     field :execution_type, { enum: -> { EXECUTION_TYPE }}
+    field :is_once_off, 'bool'
     field :id, 'string'
     has_no_post
     has_no_delete

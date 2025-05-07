@@ -14,16 +14,8 @@ module FacebookAds
   # pull request for this class.
 
   class CatalogItemRejectionReasons < AdObject
-    CAPABILITY = [
-      "business_inbox_in_messenger",
-      "shops",
-      "test_capability",
-      "universal_checkout",
-      "us_marketplace",
-    ]
 
-
-    field :capability, { enum: -> { CAPABILITY }}
+    field :capability, 'string'
     field :rejection_information, { list: 'object' }
     has_no_id
     has_no_get

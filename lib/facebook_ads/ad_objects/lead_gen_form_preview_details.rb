@@ -15,9 +15,14 @@ module FacebookAds
 
   class LeadGenFormPreviewDetails < AdObject
 
+    field :call_business_text, 'string'
     field :call_to_action_title, 'string'
+    field :chat_on_messenger_text, 'string'
+    field :chat_on_whatsapp_text, 'string'
     field :contact_information_text, 'string'
     field :creatives_overview_default_text, 'string'
+    field :custom_disclaimer_editor_state, 'string'
+    field :custom_disclaimer_title, 'string'
     field :data_privacy_policy_setting_description, 'string'
     field :default_appointment_scheduling_inline_context, 'string'
     field :default_disqualified_end_component, 'object'
@@ -39,15 +44,21 @@ module FacebookAds
     field :optional_question_text, 'string'
     field :personal_info_text, 'string'
     field :phone_number_inline_context_text, 'string'
+    field :privacy_policy_link_text, 'string'
+    field :privacy_policy_link_text_for_optional_privacy_policy, 'string'
     field :privacy_policy_title_section_title_text, 'string'
     field :privacy_setting_description, 'string'
     field :products_section_headers, { list: 'hash' }
     field :qualified_thank_you_card_transparency_info_text, 'string'
+    field :redeem_promo_code_text, 'string'
+    field :return_to_facebook_text, 'string'
     field :review_your_info_text, 'string'
     field :secure_sharing_text, 'string'
+    field :secure_sharing_text_for_optional_privacy_policy, 'string'
     field :slide_to_submit_text, 'string'
     field :social_proof_section_headers, { list: 'hash' }
     field :submit_button_text, 'string'
+    field :view_file_text, 'string'
     has_no_id
     has_no_get
     has_no_post

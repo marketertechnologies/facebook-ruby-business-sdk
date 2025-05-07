@@ -41,6 +41,7 @@ module FacebookAds
 
     ONLINE_EVENT_FORMAT = [
       "fb_live",
+      "horizon_world",
       "messenger_room",
       "none",
       "other",
@@ -51,6 +52,7 @@ module FacebookAds
       "community",
       "friends",
       "group",
+      "messenger_community",
       "private",
       "public",
       "work_company",
