@@ -53,6 +53,7 @@ module FacebookAds
     ]
 
     OPTIMIZATION_GOAL = [
+      "ADVERTISER_SILOED_VALUE",
       "AD_RECALL_LIFT",
       "APP_INSTALLS",
       "APP_INSTALLS_AND_OFFSITE_CONVERSIONS",
@@ -72,6 +73,7 @@ module FacebookAds
       "OFFSITE_CONVERSIONS",
       "PAGE_LIKES",
       "POST_ENGAGEMENT",
+      "PROFILE_AND_PAGE_ENGAGEMENT",
       "PROFILE_VISIT",
       "QUALITY_CALL",
       "QUALITY_LEAD",
@@ -117,8 +119,10 @@ module FacebookAds
       "APP",
       "APPLINKS_AUTOMATIC",
       "FACEBOOK",
+      "FACEBOOK_PAGE",
       "INSTAGRAM_DIRECT",
       "INSTAGRAM_PROFILE",
+      "INSTAGRAM_PROFILE_AND_FACEBOOK_PAGE",
       "MESSAGING_INSTAGRAM_DIRECT_MESSENGER",
       "MESSAGING_INSTAGRAM_DIRECT_MESSENGER_WHATSAPP",
       "MESSAGING_INSTAGRAM_DIRECT_WHATSAPP",
@@ -168,11 +172,16 @@ module FacebookAds
     REGIONAL_REGULATED_CATEGORIES = [
       "0",
       "1",
+      "2",
+      "3",
+      "4",
+      "5",
     ]
 
     TUNE_FOR_CATEGORY = [
       "CREDIT",
       "EMPLOYMENT",
+      "FINANCIAL_PRODUCTS_SERVICES",
       "HOUSING",
       "ISSUES_ELECTIONS_POLITICS",
       "NONE",
@@ -202,6 +211,7 @@ module FacebookAds
     field :bid_info, 'map<string, unsigned int>'
     field :bid_strategy, { enum: -> { BID_STRATEGY }}
     field :billing_event, { enum: -> { BILLING_EVENT }}
+    field :brand_safety_config, 'BrandSafetyCampaignConfig'
     field :budget_remaining, 'string'
     field :campaign, 'Campaign'
     field :campaign_active_time, 'string'
@@ -222,7 +232,8 @@ module FacebookAds
     field :frequency_control_specs, { list: 'AdCampaignFrequencyControlSpecs' }
     field :full_funnel_exploration_mode, 'string'
     field :id, 'string'
-    field :instagram_actor_id, 'string'
+    field :instagram_user_id, 'string'
+    field :is_ba_skip_delayed_eligible, 'bool'
     field :is_budget_schedule_enabled, 'bool'
     field :is_dynamic_creative, 'bool'
     field :issues_info, { list: 'AdCampaignIssuesInfo' }
@@ -231,6 +242,8 @@ module FacebookAds
     field :lifetime_imps, 'int'
     field :lifetime_min_spend_target, 'string'
     field :lifetime_spend_cap, 'string'
+    field :max_budget_spend_percentage, 'string'
+    field :min_budget_spend_percentage, 'string'
     field :multi_optimization_goal_weight, 'string'
     field :name, 'string'
     field :optimization_goal, { enum: -> { OPTIMIZATION_GOAL }}
@@ -257,6 +270,7 @@ module FacebookAds
     field :daily_imps, 'int'
     field :date_format, 'string'
     field :execution_options, { list: { enum: -> { EXECUTION_OPTIONS }} }
+    field :is_sac_cfca_terms_certified, 'bool'
     field :line_number, 'int'
     field :rb_prediction_id, 'string'
     field :time_start, 'datetime'
@@ -397,6 +411,18 @@ module FacebookAds
         api.has_param :time_ranges, { list: 'hash' }
         api.has_param :use_account_attribution_setting, 'bool'
         api.has_param :use_unified_attribution_setting, 'bool'
+      end
+    end
+
+    has_edge :message_delivery_estimate do |edge|
+      edge.get 'MessageDeliveryEstimate' do |api|
+        api.has_param :bid_amount, 'int'
+        api.has_param :lifetime_budget, 'int'
+        api.has_param :lifetime_in_days, 'int'
+        api.has_param :optimization_goal, { enum: -> { MessageDeliveryEstimate::OPTIMIZATION_GOAL }}
+        api.has_param :pacing_type, { enum: -> { MessageDeliveryEstimate::PACING_TYPE }}
+        api.has_param :promoted_object, 'object'
+        api.has_param :targeting_spec, 'Targeting'
       end
     end
 

@@ -48,6 +48,11 @@ module FacebookAds
       "USER_PROVIDED_ONLY",
     ]
 
+    SUBSCRIPTION_INFO = [
+      "MESSENGER",
+      "WHATSAPP",
+    ]
+
     SUBTYPE = [
       "APP",
       "BAG_OF_ACCOUNTS",
@@ -60,14 +65,19 @@ module FacebookAds
       "LOOKALIKE",
       "MANAGED",
       "MEASUREMENT",
+      "MESSENGER_SUBSCRIBER_LIST",
       "OFFLINE_CONVERSION",
       "PARTNER",
       "PRIMARY",
       "REGULATED_CATEGORIES_AUDIENCE",
       "STUDY_RULE_AUDIENCE",
-      "SUBSCRIBER_SEGMENT",
       "VIDEO",
       "WEBSITE",
+    ]
+
+    USE_FOR_PRODUCTS = [
+      "ADS",
+      "MARKETING_MESSAGES",
     ]
 
     ACTION_SOURCE = [
@@ -91,6 +101,7 @@ module FacebookAds
     field :household_audience, 'int'
     field :id, 'string'
     field :included_custom_audiences, { list: 'CustomAudience' }
+    field :is_eligible_for_sac_campaigns, 'bool'
     field :is_household, 'bool'
     field :is_snapshot, 'bool'
     field :is_value_based, 'bool'
@@ -126,13 +137,17 @@ module FacebookAds
     field :event_source_group, 'string'
     field :event_sources, { list: 'hash' }
     field :exclusions, { list: 'object' }
+    field :facebook_page_id, 'string'
     field :inclusions, { list: 'object' }
     field :list_of_accounts, { list: 'int' }
+    field :marketing_message_channels, 'object'
     field :origin_audience_id, 'string'
     field :parent_audience_id, 'int'
     field :partner_reference_key, 'string'
     field :prefill, 'bool'
     field :product_set_id, 'string'
+    field :subscription_info, { list: { enum: -> { SUBSCRIPTION_INFO }} }
+    field :use_for_products, { list: { enum: -> { USE_FOR_PRODUCTS }} }
     field :use_in_campaigns, 'bool'
     field :video_group_ids, { list: 'string' }
     field :whats_app_business_phone_number_id, 'string'
@@ -156,6 +171,16 @@ module FacebookAds
       edge.get 'Ad' do |api|
         api.has_param :effective_status, { list: 'string' }
         api.has_param :status, { list: 'string' }
+      end
+    end
+
+    has_edge :health do |edge|
+      edge.get 'CustomAudienceHealth' do |api|
+        api.has_param :calculated_date, 'string'
+        api.has_param :processed_date, 'string'
+        api.has_param :value_aggregation_duration, 'int'
+        api.has_param :value_currency, 'string'
+        api.has_param :value_version, 'int'
       end
     end
 

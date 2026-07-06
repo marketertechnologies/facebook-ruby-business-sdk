@@ -29,6 +29,7 @@ module FacebookAds
     field :app_link_spec, 'AdCreativeLinkDataAppLinkSpec'
     field :attachment_style, 'string'
     field :automated_product_tags, 'bool'
+    field :boosted_product_set_id, 'string'
     field :branded_content_shared_to_sponsor_status, 'string'
     field :branded_content_sponsor_page_id, 'string'
     field :call_to_action, 'AdCreativeLinkDataCallToAction'
@@ -54,6 +55,7 @@ module FacebookAds
     field :picture, 'string'
     field :post_click_configuration, 'AdCreativePostClickConfiguration'
     field :preferred_image_tags, { list: 'string' }
+    field :preferred_video_tags, { list: 'string' }
     field :retailer_item_ids, { list: 'string' }
     field :show_multiple_images, 'bool'
     field :static_fallback_spec, 'AdCreativeStaticFallbackSpec'

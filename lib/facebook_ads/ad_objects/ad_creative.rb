@@ -45,6 +45,7 @@ module FacebookAds
       "FOLLOW_USER",
       "GET_A_QUOTE",
       "GET_DIRECTIONS",
+      "GET_IN_TOUCH",
       "GET_OFFER",
       "GET_OFFER_VIEW",
       "GET_PROMOTIONS",
@@ -93,8 +94,11 @@ module FacebookAds
       "USE_MOBILE_APP",
       "VIDEO_ANNOTATION",
       "VIDEO_CALL",
+      "VIEW_CART",
+      "VIEW_CHANNEL",
       "VIEW_PRODUCT",
       "VISIT_PAGES_FEED",
+      "WATCH_LIVE_VIDEO",
       "WATCH_MORE",
       "WATCH_VIDEO",
       "WHATSAPP_MESSAGE",
@@ -163,6 +167,7 @@ module FacebookAds
 
     field :account_id, 'string'
     field :actor_id, 'string'
+    field :ad_disclaimer_spec, 'AdCreativeAdDisclaimer'
     field :adlabels, { list: 'AdLabel' }
     field :applink_treatment, 'string'
     field :asset_feed_spec, 'AdAssetFeedSpec'
@@ -172,6 +177,7 @@ module FacebookAds
     field :branded_content, 'AdCreativeBrandedContentAds'
     field :branded_content_sponsor_page_id, 'string'
     field :bundle_folder_id, 'string'
+    field :call_to_action, 'AdCreativeLinkDataCallToAction'
     field :call_to_action_type, { enum: -> { CALL_TO_ACTION_TYPE }}
     field :categorization_criteria, 'string'
     field :category_media_source, 'string'
@@ -183,7 +189,6 @@ module FacebookAds
     field :dynamic_ad_voice, 'string'
     field :effective_authorization_category, 'string'
     field :effective_instagram_media_id, 'string'
-    field :effective_instagram_story_id, 'string'
     field :effective_object_story_id, 'string'
     field :enable_direct_install, 'bool'
     field :enable_launch_instant_app, 'bool'
@@ -192,16 +197,15 @@ module FacebookAds
     field :image_crops, 'AdsImageCrops'
     field :image_hash, 'string'
     field :image_url, 'string'
-    field :instagram_actor_id, 'string'
     field :instagram_branded_content, 'AdCreativeInstagramBrandedContent'
     field :instagram_permalink_url, 'string'
-    field :instagram_story_id, 'string'
     field :instagram_user_id, 'string'
     field :interactive_components_spec, 'AdCreativeInteractiveComponentsSpec'
     field :link_deep_link_url, 'string'
     field :link_destination_display_url, 'string'
     field :link_og_id, 'string'
     field :link_url, 'string'
+    field :messenger_sponsored_message, 'string'
     field :name, 'string'
     field :object_id, 'string'
     field :object_store_url, 'string'
@@ -216,8 +220,10 @@ module FacebookAds
     field :platform_customizations, 'AdCreativePlatformCustomization'
     field :playable_asset_id, 'string'
     field :portrait_customizations, 'AdCreativePortraitCustomizations'
+    field :product_data, { list: 'AdCreativeProductData' }
     field :product_set_id, 'string'
     field :recommender_settings, 'AdCreativeRecommenderSettings'
+    field :regional_regulation_disclaimer_spec, 'AdCreativeRegionalRegulationDisclaimer'
     field :source_instagram_media_id, 'string'
     field :status, { enum: -> { STATUS }}
     field :template_url, 'string'
@@ -228,7 +234,6 @@ module FacebookAds
     field :url_tags, 'string'
     field :use_page_actor_override, 'bool'
     field :video_id, 'string'
-    field :call_to_action, 'object'
     field :image_file, 'string'
     field :is_dco_internal, 'bool'
 

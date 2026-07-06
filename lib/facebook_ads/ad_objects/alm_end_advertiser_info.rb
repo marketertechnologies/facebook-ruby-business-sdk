@@ -13,13 +13,13 @@ module FacebookAds
   # on github and we'll fix in our codegen framework. We'll not be able to accept
   # pull request for this class.
 
-  class ProductFeedMissingFeedItemReplacement < AdObject
+  class AlmEndAdvertiserInfo < AdObject
 
-    field :home_listing, 'object'
-    field :product_item, 'object'
-    field :vehicle, 'object'
-    has_no_id
-    has_no_get
+    field :estimated_ad_budget, 'int'
+    field :id, 'string'
+    field :parent_advertiser_id, 'string'
+    field :parent_advertiser_name, 'string'
+    field :tag, { list: 'string' }
     has_no_post
     has_no_delete
 

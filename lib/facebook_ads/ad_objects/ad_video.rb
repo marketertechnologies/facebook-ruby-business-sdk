@@ -23,17 +23,14 @@ module FacebookAds
       "AD_LIBRARY_WATERMARK",
       "AGE_UP",
       "ALBUM_MULTIMEDIA_POST",
-      "ALOHA_CALL_VIDEO",
       "ALOHA_SUPERFRAME",
       "APP_REREVIEW_SCREENCAST",
       "APP_REVIEW_SCREENCAST",
       "ASSET_MANAGER",
       "ATLAS_VIDEO",
-      "AUDIO_BRIEF",
       "AUDIO_BROADCAST",
       "AUDIO_COMMENT",
       "BROADCAST",
-      "BULLETIN_ARTICLE_AUDIO",
       "CANVAS",
       "CFC_VIDEO",
       "CMS_MEDIA_MANAGER",
@@ -44,6 +41,8 @@ module FacebookAds
       "COPYRIGHT_REFERENCE_IG_XPOST_VIDEO",
       "COPYRIGHT_REFERENCE_VIDEO",
       "CREATION_ML_PRECREATION",
+      "CREATOR_FAN_CHALLENGE",
+      "CREATOR_STOREFRONT_PERSONALIZED_VIDEO",
       "DATAGENIX_VIDEO",
       "DCO_AD_ASSET_FEED",
       "DCO_AUTOGEN_VIDEO",
@@ -63,7 +62,6 @@ module FacebookAds
       "FB_COLLECTIBLE_VIDEO",
       "FB_SHORTS",
       "FB_SHORTS_CONTENT_REMIXABLE",
-      "FB_SHORTS_CROSS_META_POST",
       "FB_SHORTS_GROUP_POST",
       "FB_SHORTS_LINKED_PRODUCT",
       "FB_SHORTS_PMV_POST",
@@ -72,7 +70,6 @@ module FacebookAds
       "FB_SHORTS_REMIX_POST",
       "FUNDRAISER_COVER_VIDEO",
       "GAME_CLIP",
-      "GEMSTONE",
       "GIF_TO_VIDEO",
       "GOODWILL_ANNIVERSARY_DEPRECATED",
       "GOODWILL_ANNIVERSARY_PROMOTION_DEPRECATED",
@@ -81,7 +78,6 @@ module FacebookAds
       "GOODWILL_VIDEO_SHARE",
       "GOODWILL_VIDEO_TOKEN_REQUIRED",
       "GROUP_POST",
-      "HACK_TV",
       "HEURISTIC_CLUSTER_VIDEO",
       "HIGHLIGHT_CLIP_VIDEO",
       "HUDDLE_BROADCAST",
@@ -92,13 +88,7 @@ module FacebookAds
       "INSTAGRAM_VIDEO_COPY",
       "INSTANT_APPLICATION_PREVIEW",
       "INSTANT_ARTICLE",
-      "INSTANT_GAMES_PROMO",
-      "INSTANT_GAME_CLIP",
       "ISSUE_MODULE",
-      "JOBS_CAREERS",
-      "JOBS_VISUAL_INTRO_ENTRY",
-      "JOB_APPLICATION_VIDEO",
-      "JOB_OPENING_VIDEO",
       "LEARN",
       "LEGACY",
       "LEGACY_CONTAINED_POST_BROADCAST",
@@ -110,10 +100,8 @@ module FacebookAds
       "LOOK_NOW_DEPRECATED",
       "MARKETPLACE_LISTING_VIDEO",
       "MARKETPLACE_PRE_RECORDED_VIDEO",
-      "MESSENGER_WATCH_TOGETHER",
       "MOMENTS_VIDEO",
       "MUSIC_CLIP",
-      "MUSIC_CLIP_IN_AUDIO_DIGEST",
       "MUSIC_CLIP_IN_COMMENT",
       "MUSIC_CLIP_IN_LIGHTWEIGHT_STATUS",
       "MUSIC_CLIP_IN_MSGR_NOTE",
@@ -122,11 +110,10 @@ module FacebookAds
       "NEO_ASYNC_GAME_VIDEO",
       "NEW_CONTAINED_POST_BROADCAST",
       "NO_STORY",
-      "NO_STORY_WITH_ENTPOST",
       "NPE_COLLAB_COPYRIGHT_CHECK",
       "OCULUS_CREATOR_PORTAL",
       "OCULUS_VENUES_BROADCAST",
-      "OFFERS_VIDEO",
+      "ORIGINALITY_SELF_ADVOCACY",
       "PAGES_COVER_VIDEO",
       "PAGE_REVIEW_SCREENCAST",
       "PAGE_SLIDESHOW_VIDEO",
@@ -159,7 +146,6 @@ module FacebookAds
       "QUICK_PROMOTION",
       "REPLACE_VIDEO",
       "SALES_CLIENT_INTERACTION",
-      "SAY_THANKS_DEPRECATED",
       "SHOWREEL_NATIVE_DUMMY_VIDEO",
       "SLIDESHOW_ANIMOTO",
       "SLIDESHOW_SHAKR",
@@ -177,6 +163,7 @@ module FacebookAds
       "TAROT_DIGEST",
       "TEMPORARY_UNLISTED",
       "TEMP_MULTIMEDIA_POST",
+      "TEMP_VIDEO_COPYRIGHT_SCAN",
       "UNLISTED",
       "UNLISTED_HORIZON",
       "UNLISTED_OCULUS",
@@ -244,6 +231,12 @@ module FacebookAds
       "transfer",
     ]
 
+    VIDEO_STATE = [
+      "DRAFT",
+      "PUBLISHED",
+      "SCHEDULED",
+    ]
+
     VALIDATION_AD_PLACEMENTS = [
       "AUDIENCE_NETWORK_INSTREAM_VIDEO",
       "AUDIENCE_NETWORK_INSTREAM_VIDEO_MOBILE",
@@ -275,12 +268,6 @@ module FacebookAds
       "uploaded",
     ]
 
-    VIDEO_STATE = [
-      "DRAFT",
-      "PUBLISHED",
-      "SCHEDULED",
-    ]
-
     BACKDATED_TIME_GRANULARITY = [
       "day",
       "hour",
@@ -296,6 +283,7 @@ module FacebookAds
     field :audio_isrc, 'AudioIsrc'
     field :backdated_time, 'datetime'
     field :backdated_time_granularity, 'string'
+    field :boost_eligibility_info, 'object'
     field :content_category, 'string'
     field :content_tags, { list: 'string' }
     field :copyright, 'VideoCopyright'
@@ -337,7 +325,6 @@ module FacebookAds
     field :universal_video_id, 'string'
     field :updated_time, 'datetime'
     field :views, 'int'
-    field :animated_effect_id, 'int'
     field :application_id, 'string'
     field :asked_fun_fact_prompt_id, 'int'
     field :audio_story_wave_animation_handle, 'string'
@@ -359,11 +346,10 @@ module FacebookAds
     field :formatting, { enum: -> { FORMATTING }}
     field :fov, 'int'
     field :front_z_rotation, 'double'
-    field :fun_fact_prompt_id, 'int'
+    field :fun_fact_prompt_id, 'string'
     field :fun_fact_toastee_id, 'int'
     field :guide, { list: { list: 'int' } }
     field :guide_enabled, 'bool'
-    field :holiday_card, 'string'
     field :initial_heading, 'int'
     field :initial_pitch, 'int'
     field :instant_game_entry_point_data, 'string'
@@ -372,7 +358,6 @@ module FacebookAds
     field :is_voice_clip, 'bool'
     field :location_source_id, 'string'
     field :name, 'string'
-    field :offer_like_post_id, 'int'
     field :og_action_type_id, 'string'
     field :og_icon_id, 'string'
     field :og_object_id, 'string'
@@ -388,7 +373,6 @@ module FacebookAds
     field :start_offset, 'int'
     field :swap_mode, { enum: -> { SWAP_MODE }}
     field :text_format_metadata, 'string'
-    field :throwback_camera_roll_media, 'string'
     field :thumb, 'file'
     field :time_since_original_post, 'int'
     field :transcode_setting_properties, 'string'
@@ -400,9 +384,15 @@ module FacebookAds
     field :video_id_original, 'string'
     field :video_start_time_ms, 'int'
     field :waterfall_id, 'string'
+    field :video_id, 'string'
+    field :video_state, { enum: -> { VIDEO_STATE }}
     field :ad_placements_validation_only, 'bool'
     field :creative_folder_id, 'string'
     field :validation_ad_placements, { list: { enum: -> { VALIDATION_AD_PLACEMENTS }} }
+
+    has_edge :boost_ads_list do |edge|
+      edge.get
+    end
 
     has_edge :captions do |edge|
       edge.get
@@ -487,11 +477,6 @@ module FacebookAds
 
     has_edge :tags do |edge|
       edge.get 'TaggableSubject'
-      edge.post 'AdVideo' do |api|
-        api.has_param :tag_uid, 'int'
-        api.has_param :uid, 'int'
-        api.has_param :vid, 'string'
-      end
     end
 
     has_edge :thumbnails do |edge|

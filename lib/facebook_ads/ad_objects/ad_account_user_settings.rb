@@ -41,11 +41,14 @@ module FacebookAds
 
     field :acf_should_opt_out_video_adjustments, 'bool'
     field :aco_sticky_settings, { list: 'hash' }
+    field :actions_quick_view_created, 'bool'
+    field :active_ads_quick_view_created, 'bool'
     field :ad_account, 'AdAccount'
     field :ad_object_export_format, 'string'
     field :auto_review_video_caption, 'bool'
     field :campaign_overview_columns, { list: 'string' }
     field :column_suggestion_status, 'string'
+    field :conditional_formatting_rules, { list: 'string' }
     field :default_account_overview_agegender_metrics, { list: 'string' }
     field :default_account_overview_location_metrics, { list: 'string' }
     field :default_account_overview_metrics, { list: 'string' }
@@ -55,13 +58,17 @@ module FacebookAds
     field :draft_mode_enabled, 'bool'
     field :export_deleted_items_with_delivery, 'bool'
     field :export_summary_row, 'bool'
+    field :had_delivery_quick_view_created, 'bool'
     field :has_seen_groups_column_flexing_experience, 'bool'
+    field :has_seen_instagram_column_flexing_experience, 'bool'
     field :has_seen_leads_column_flexing_experience, 'bool'
     field :has_seen_shops_ads_metrics_onboarding_tour, 'bool'
     field :has_seen_shops_column_flexing_experience, 'bool'
     field :hidden_optimization_tips, { list: 'hash' }
     field :id, 'string'
     field :is_3p_auth_setting_set, 'bool'
+    field :is_ads_manager_footer_row_preference_set, 'bool'
+    field :is_ads_manager_footer_row_shown, 'bool'
     field :is_text_variation_nux_close, 'bool'
     field :last_used_columns, 'object'
     field :last_used_pe_filters, { list: 'object' }
@@ -83,6 +90,7 @@ module FacebookAds
     field :should_default_instagram_profile_card_optimization, 'bool'
     field :should_default_text_swapping_optimization, 'bool'
     field :should_logout_of_3p_sourcing, 'bool'
+    field :should_show_shops_ads_metrics_onboarding_tour, 'bool'
     field :show_archived_data, 'bool'
     field :show_text_variation_nux_tooltip, 'bool'
     field :syd_campaign_trends_activemetric, 'string'
