@@ -19,8 +19,11 @@ module FacebookAds
     field :business_discovery, 'IgUser'
     field :followers_count, 'int'
     field :follows_count, 'int'
+    field :has_profile_pic, 'bool'
     field :id, 'string'
     field :ig_id, 'int'
+    field :is_published, 'bool'
+    field :legacy_instagram_user_id, 'string'
     field :media_count, 'int'
     field :mentioned_comment, 'IgComment'
     field :mentioned_media, 'IgMedia'
@@ -33,6 +36,20 @@ module FacebookAds
     field :website, 'string'
     has_no_post
     has_no_delete
+
+    has_edge :agencies do |edge|
+      edge.get 'Business'
+    end
+
+    has_edge :authorized_adaccounts do |edge|
+      edge.get 'AdAccount' do |api|
+        api.has_param :business, 'string'
+      end
+      edge.post 'IgUser' do |api|
+        api.has_param :account_id, 'string'
+        api.has_param :business, 'string'
+      end
+    end
 
     has_edge :available_catalogs do |edge|
       edge.get 'UserAvailableCatalogs'
@@ -49,8 +66,10 @@ module FacebookAds
 
     has_edge :branded_content_advertisable_medias do |edge|
       edge.get 'BrandedContentShadowIgMediaId' do |api|
+        api.has_param :ad_code, 'string'
         api.has_param :creator_username, 'string'
         api.has_param :only_fetch_allowlisted, 'bool'
+        api.has_param :only_fetch_recommended_content, 'bool'
         api.has_param :permalinks, { list: 'string' }
       end
     end
@@ -74,6 +93,10 @@ module FacebookAds
       end
     end
 
+    has_edge :connected_threads_user do |edge|
+      edge.get 'ThreadsUser'
+    end
+
     has_edge :content_publishing_limit do |edge|
       edge.get 'ContentPublishingLimitResponse' do |api|
         api.has_param :since, 'datetime'
@@ -81,8 +104,10 @@ module FacebookAds
     end
 
     has_edge :dataset do |edge|
-      edge.get 'AdsPixel'
-      edge.post 'AdsPixel'
+      edge.get 'Dataset'
+      edge.post 'Dataset' do |api|
+        api.has_param :dataset_name, 'string'
+      end
     end
 
     has_edge :insights do |edge|
@@ -95,6 +120,11 @@ module FacebookAds
         api.has_param :timeframe, { enum: -> { InstagramInsightsResult::TIMEFRAME }}
         api.has_param :until, 'datetime'
       end
+    end
+
+    has_edge :instagram_backed_threads_user do |edge|
+      edge.get 'ThreadsUser'
+      edge.post 'ThreadsUser'
     end
 
     has_edge :live_media do |edge|
@@ -110,6 +140,7 @@ module FacebookAds
         api.has_param :until, 'datetime'
       end
       edge.post 'IgMedia' do |api|
+        api.has_param :alt_text, 'string'
         api.has_param :audio_name, 'string'
         api.has_param :caption, 'string'
         api.has_param :children, { list: 'string' }
@@ -166,6 +197,16 @@ module FacebookAds
 
     has_edge :tags do |edge|
       edge.get 'IgMedia'
+    end
+
+    has_edge :upcoming_events do |edge|
+      edge.get 'IgUpcomingEvent'
+      edge.post do |api|
+        api.has_param :end_time, 'datetime'
+        api.has_param :notification_subtypes, { list: { enum: %w{AFTER_EVENT_1DAY AFTER_EVENT_2DAY AFTER_EVENT_3DAY AFTER_EVENT_4DAY AFTER_EVENT_5DAY AFTER_EVENT_6DAY AFTER_EVENT_7DAY BEFORE_EVENT_15MIN BEFORE_EVENT_1DAY BEFORE_EVENT_1HOUR BEFORE_EVENT_2DAY EVENT_START RESCHEDULED }} }
+        api.has_param :start_time, 'datetime'
+        api.has_param :title, 'string'
+      end
     end
 
   end

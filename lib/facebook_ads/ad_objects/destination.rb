@@ -33,6 +33,16 @@ module FacebookAds
     field :applinks, 'CatalogItemAppLinks'
     field :category_specific_fields, 'CatalogSubVerticalList'
     field :currency, 'string'
+    field :custom_label_0, 'string'
+    field :custom_label_1, 'string'
+    field :custom_label_2, 'string'
+    field :custom_label_3, 'string'
+    field :custom_label_4, 'string'
+    field :custom_number_0, 'int'
+    field :custom_number_1, 'int'
+    field :custom_number_2, 'int'
+    field :custom_number_3, 'int'
+    field :custom_number_4, 'int'
     field :description, 'string'
     field :destination_id, 'string'
     field :id, 'string'
@@ -50,12 +60,15 @@ module FacebookAds
     has_no_post
     has_no_delete
 
-    has_edge :augmented_realities_metadata do |edge|
-      edge.get 'DynamicArMetadata'
-    end
-
     has_edge :channels_to_integrity_status do |edge|
       edge.get 'CatalogItemChannelsToIntegrityStatus'
+    end
+
+    has_edge :override_details do |edge|
+      edge.get 'OverrideDetails' do |api|
+        api.has_param :keys, { list: 'string' }
+        api.has_param :type, { enum: -> { OverrideDetails::TYPE }}
+      end
     end
 
     has_edge :videos_metadata do |edge|

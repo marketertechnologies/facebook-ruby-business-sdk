@@ -17,9 +17,14 @@ module FacebookAds
 
     field :amount, 'int'
     field :campaign_ids, { list: 'int' }
+    field :coupon_id, 'string'
+    field :coupon_tiering, 'FundingSourceDetailsCouponTiering'
     field :currency, 'string'
     field :display_amount, 'string'
     field :expiration, 'datetime'
+    field :original_amount, 'int'
+    field :original_display_amount, 'string'
+    field :start_date, 'datetime'
     has_no_id
     has_no_get
     has_no_post

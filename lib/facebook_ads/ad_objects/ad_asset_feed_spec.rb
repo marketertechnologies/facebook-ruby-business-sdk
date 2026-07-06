@@ -45,6 +45,7 @@ module FacebookAds
       "FOLLOW_USER",
       "GET_A_QUOTE",
       "GET_DIRECTIONS",
+      "GET_IN_TOUCH",
       "GET_OFFER",
       "GET_OFFER_VIEW",
       "GET_PROMOTIONS",
@@ -93,8 +94,11 @@ module FacebookAds
       "USE_MOBILE_APP",
       "VIDEO_ANNOTATION",
       "VIDEO_CALL",
+      "VIEW_CART",
+      "VIEW_CHANNEL",
       "VIEW_PRODUCT",
       "VISIT_PAGES_FEED",
+      "WATCH_LIVE_VIDEO",
       "WATCH_MORE",
       "WATCH_VIDEO",
       "WHATSAPP_MESSAGE",
@@ -106,12 +110,15 @@ module FacebookAds
     field :additional_data, 'AdAssetFeedAdditionalData'
     field :app_product_page_id, 'string'
     field :asset_customization_rules, { list: 'AdAssetFeedSpecAssetCustomizationRule' }
+    field :audios, { list: 'object' }
     field :autotranslate, { list: 'string' }
     field :bodies, { list: 'AdAssetFeedSpecBody' }
+    field :call_ads_configuration, 'object'
     field :call_to_action_types, { list: { enum: -> { CALL_TO_ACTION_TYPES }} }
     field :call_to_actions, { list: 'AdAssetFeedSpecCallToAction' }
     field :captions, { list: 'AdAssetFeedSpecCaption' }
     field :carousels, { list: 'AdAssetFeedSpecCarousel' }
+    field :ctwa_consent_data, { list: 'object' }
     field :descriptions, { list: 'AdAssetFeedSpecDescription' }
     field :events, { list: 'AdAssetFeedSpecEvents' }
     field :groups, { list: 'AdAssetFeedSpecGroupRule' }

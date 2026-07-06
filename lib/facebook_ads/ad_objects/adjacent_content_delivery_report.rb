@@ -15,7 +15,9 @@ module FacebookAds
 
   class AdjacentContentDeliveryReport < AdObject
 
+    field :ad_id, 'string'
     field :content, { list: 'object' }
+    field :impression_id, 'string'
     has_no_id
     has_no_get
     has_no_post

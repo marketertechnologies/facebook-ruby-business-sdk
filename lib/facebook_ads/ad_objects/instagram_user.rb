@@ -19,6 +19,7 @@ module FacebookAds
     field :followed_by_count, 'int'
     field :has_profile_picture, 'bool'
     field :id, 'string'
+    field :ig_user_id, 'string'
     field :is_private, 'bool'
     field :is_published, 'bool'
     field :media_count, 'int'
@@ -51,6 +52,8 @@ module FacebookAds
       edge.get 'IgUpcomingEvent'
       edge.post 'IgUpcomingEvent' do |api|
         api.has_param :end_time, 'datetime'
+        api.has_param :notification_subtypes, { list: { enum: -> { IgUpcomingEvent::NOTIFICATION_SUBTYPES }} }
+        api.has_param :notification_target_time, { enum: -> { IgUpcomingEvent::NOTIFICATION_TARGET_TIME }}
         api.has_param :start_time, 'datetime'
         api.has_param :title, 'string'
       end

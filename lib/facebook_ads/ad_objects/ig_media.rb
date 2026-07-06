@@ -23,6 +23,7 @@ module FacebookAds
     field :ig_id, 'string'
     field :is_comment_enabled, 'bool'
     field :is_shared_to_feed, 'bool'
+    field :legacy_instagram_media_id, 'string'
     field :like_count, 'int'
     field :media_product_type, 'string'
     field :media_type, 'string'
@@ -70,11 +71,12 @@ module FacebookAds
       end
     end
 
+    has_edge :partnership_ad_code do |edge|
+      edge.delete
+      edge.post
+    end
+
     has_edge :product_tags do |edge|
-      edge.delete do |api|
-        api.has_param :child_index, 'int'
-        api.has_param :deleted_tags, { list: 'hash' }
-      end
       edge.get 'ShadowIgMediaProductTags'
       edge.post 'ShadowIgMediaProductTags' do |api|
         api.has_param :child_index, 'int'

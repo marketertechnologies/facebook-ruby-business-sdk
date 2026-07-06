@@ -14,6 +14,19 @@ module FacebookAds
   # pull request for this class.
 
   class WhatsAppBusinessAccount < AdObject
+    BUSINESS_VERIFICATION_STATUS = [
+      "expired",
+      "failed",
+      "ineligible",
+      "not_verified",
+      "pending",
+      "pending_need_more_info",
+      "pending_submission",
+      "rejected",
+      "revoked",
+      "verified",
+    ]
+
     TASKS = [
       "DEVELOP",
       "MANAGE",
@@ -37,16 +50,29 @@ module FacebookAds
       "ORDER_DETAILS",
     ]
 
+    PARAMETER_FORMAT = [
+      "NAMED",
+      "POSITIONAL",
+    ]
+
     SUB_CATEGORY = [
       "ORDER_DETAILS",
       "ORDER_STATUS",
+    ]
+
+    PROVIDER_NAME = [
+      "BILLDESK",
+      "PAYU",
+      "RAZORPAY",
+      "UPI_VPA",
+      "ZAAKPAY",
     ]
 
 
     field :account_review_status, 'string'
     field :analytics, 'object'
     field :auth_international_rate_eligibility, 'object'
-    field :business_verification_status, 'string'
+    field :business_verification_status, { enum: -> { BUSINESS_VERIFICATION_STATUS }}
     field :country, 'string'
     field :creation_time, 'int'
     field :currency, 'string'
@@ -54,6 +80,7 @@ module FacebookAds
     field :id, 'string'
     field :is_enabled_for_insights, 'bool'
     field :linked_commerce_account, 'CommerceMerchantSettings'
+    field :marketing_messages_lite_api_status, 'string'
     field :message_template_namespace, 'string'
     field :name, 'string'
     field :on_behalf_of_business_info, 'object'
@@ -66,6 +93,10 @@ module FacebookAds
     field :status, 'string'
     field :timezone_id, 'string'
     has_no_delete
+
+    has_edge :activities do |edge|
+      edge.get
+    end
 
     has_edge :assigned_users do |edge|
       edge.delete do |api|
@@ -84,9 +115,22 @@ module FacebookAds
       edge.get
     end
 
+    has_edge :call_analytics do |edge|
+      edge.get do |api|
+        api.has_param :country_codes, { list: 'string' }
+        api.has_param :dimensions, { list: { enum: %w{COUNTRY DIRECTION PHONE UNKNOWN }} }
+        api.has_param :directions, { list: { enum: %w{BUSINESS_INITIATED UNKNOWN USER_INITIATED }} }
+        api.has_param :end, 'int'
+        api.has_param :granularity, { enum: %w{DAILY HALF_HOUR MONTHLY }}
+        api.has_param :metric_types, { list: { enum: %w{AVERAGE_DURATION COST COUNT UNKNOWN }} }
+        api.has_param :phone_numbers, { list: 'string' }
+        api.has_param :start, 'int'
+      end
+    end
+
     has_edge :conversation_analytics do |edge|
       edge.get do |api|
-        api.has_param :conversation_categories, { list: { enum: %w{AUTHENTICATION AUTHENTICATION_INTERNATIONAL MARKETING MARKETING_OPTIMIZED_DELIVERY SERVICE UNKNOWN UTILITY UTILITY_FIXED_TEMPLATE }} }
+        api.has_param :conversation_categories, { list: { enum: %w{AUTHENTICATION AUTHENTICATION_INTERNATIONAL MARKETING MARKETING_LITE SERVICE UTILITY }} }
         api.has_param :conversation_directions, { list: { enum: %w{BUSINESS_INITIATED UNKNOWN USER_INITIATED }} }
         api.has_param :conversation_types, { list: { enum: %w{FREE_ENTRY_POINT FREE_TIER REGULAR UNKNOWN }} }
         api.has_param :country_codes, { list: 'string' }
@@ -99,17 +143,29 @@ module FacebookAds
       end
     end
 
-    has_edge :dcc_config do |edge|
-      edge.get
+    has_edge :dataset do |edge|
+      edge.get 'Dataset'
+      edge.post 'Dataset' do |api|
+        api.has_param :dataset_name, 'string'
+      end
     end
 
     has_edge :flows do |edge|
       edge.get
       edge.post do |api|
-        api.has_param :categories, { list: { enum: %w{APPOINTMENT_BOOKING CONTACT_US CUSTOMER_SUPPORT LEAD_GENERATION OTHER SIGN_IN SIGN_UP SURVEY }} }
+        api.has_param :categories, { list: { enum: %w{APPOINTMENT_BOOKING CONTACT_US CUSTOMER_SUPPORT LEAD_GENERATION OTHER SHOPPING SIGN_IN SIGN_UP SURVEY }} }
         api.has_param :clone_flow_id, 'string'
         api.has_param :endpoint_uri, 'string'
+        api.has_param :flow_json, 'string'
         api.has_param :name, 'string'
+        api.has_param :publish, 'bool'
+      end
+    end
+
+    has_edge :generate_payment_configuration_oauth_link do |edge|
+      edge.post 'WhatsAppBusinessAccount' do |api|
+        api.has_param :configuration_name, 'string'
+        api.has_param :redirect_url, 'string'
       end
     end
 
@@ -148,11 +204,20 @@ module FacebookAds
         api.has_param :cta_url_link_tracking_opted_out, 'bool'
         api.has_param :display_format, { enum: -> { WhatsAppBusinessAccount::DISPLAY_FORMAT }}
         api.has_param :language, 'string'
+        api.has_param :library_template_body_inputs, 'hash'
         api.has_param :library_template_button_inputs, { list: 'hash' }
         api.has_param :library_template_name, 'string'
         api.has_param :message_send_ttl_seconds, 'int'
         api.has_param :name, 'string'
+        api.has_param :parameter_format, { enum: -> { WhatsAppBusinessAccount::PARAMETER_FORMAT }}
         api.has_param :sub_category, { enum: -> { WhatsAppBusinessAccount::SUB_CATEGORY }}
+      end
+    end
+
+    has_edge :migrate_flows do |edge|
+      edge.post 'WhatsAppBusinessAccount' do |api|
+        api.has_param :source_flow_names, { list: 'string' }
+        api.has_param :source_waba_id, 'string'
       end
     end
 
@@ -163,6 +228,28 @@ module FacebookAds
       end
     end
 
+    has_edge :payment_configuration do |edge|
+      edge.delete do |api|
+        api.has_param :configuration_name, 'string'
+      end
+      edge.get do |api|
+        api.has_param :configuration_name, 'string'
+      end
+      edge.post 'WhatsAppBusinessAccount' do |api|
+        api.has_param :configuration_name, 'string'
+        api.has_param :data_endpoint_url, 'string'
+        api.has_param :merchant_category_code, 'string'
+        api.has_param :merchant_vpa, 'string'
+        api.has_param :provider_name, { enum: -> { WhatsAppBusinessAccount::PROVIDER_NAME }}
+        api.has_param :purpose_code, 'string'
+        api.has_param :redirect_url, 'string'
+      end
+    end
+
+    has_edge :payment_configurations do |edge|
+      edge.get
+    end
+
     has_edge :phone_numbers do |edge|
       edge.get
       edge.post do |api|
@@ -171,6 +258,20 @@ module FacebookAds
         api.has_param :phone_number, 'string'
         api.has_param :preverified_id, 'string'
         api.has_param :verified_name, 'string'
+      end
+    end
+
+    has_edge :pricing_analytics do |edge|
+      edge.get do |api|
+        api.has_param :country_codes, { list: 'string' }
+        api.has_param :dimensions, { list: { enum: %w{COUNTRY PHONE PRICING_CATEGORY PRICING_TYPE }} }
+        api.has_param :end, 'int'
+        api.has_param :granularity, { enum: %w{DAILY HALF_HOUR MONTHLY }}
+        api.has_param :metric_types, { list: { enum: %w{COST VOLUME }} }
+        api.has_param :phone_numbers, { list: 'string' }
+        api.has_param :pricing_categories, { list: { enum: %w{AUTHENTICATION AUTHENTICATION_INTERNATIONAL MARKETING MARKETING_LITE SERVICE UTILITY }} }
+        api.has_param :pricing_types, { list: { enum: %w{FREE_CUSTOMER_SERVICE FREE_ENTRY_POINT REGULAR }} }
+        api.has_param :start, 'int'
       end
     end
 
@@ -194,6 +295,13 @@ module FacebookAds
       end
     end
 
+    has_edge :set_solution_migration_intent do |edge|
+      edge.post do |api|
+        api.has_param :app_id, 'string'
+        api.has_param :solution_id, 'string'
+      end
+    end
+
     has_edge :solutions do |edge|
       edge.get
     end
@@ -211,9 +319,29 @@ module FacebookAds
       edge.get do |api|
         api.has_param :end, 'datetime'
         api.has_param :granularity, { enum: %w{DAILY }}
-        api.has_param :metric_types, { list: { enum: %w{CLICKED COST DELIVERED READ SENT }} }
+        api.has_param :metric_types, { list: { enum: %w{CLICKED COST DELIVERED READ REPLIED SENT }} }
+        api.has_param :product_type, { enum: %w{CLOUD_API MARKETING_MESSAGES_LITE_API }}
         api.has_param :start, 'datetime'
         api.has_param :template_ids, { list: 'string' }
+      end
+    end
+
+    has_edge :template_group_analytics do |edge|
+      edge.get do |api|
+        api.has_param :end, 'datetime'
+        api.has_param :granularity, { enum: %w{DAILY }}
+        api.has_param :metric_types, { list: { enum: %w{CLICKED COST DELIVERED READ REPLIED SENT }} }
+        api.has_param :start, 'datetime'
+        api.has_param :template_group_ids, { list: 'string' }
+      end
+    end
+
+    has_edge :template_groups do |edge|
+      edge.get
+      edge.post do |api|
+        api.has_param :description, 'string'
+        api.has_param :name, 'string'
+        api.has_param :whatsapp_business_templates, { list: 'string' }
       end
     end
 
@@ -231,6 +359,13 @@ module FacebookAds
         api.has_param :languages, { list: 'string' }
         api.has_param :message_send_ttl_seconds, 'int'
         api.has_param :name, 'string'
+      end
+    end
+
+    has_edge :welcome_message_sequences do |edge|
+      edge.get 'CtxPartnerAppWelcomeMessageFlow' do |api|
+        api.has_param :app_id, 'string'
+        api.has_param :sequence_id, 'string'
       end
     end
 

@@ -80,6 +80,17 @@ module FacebookAds
       "Vietnamese",
     ]
 
+    GEN_AI_PROVENANCE_TYPE = [
+      "C2PA",
+      "C2PA_METADATA_EDITED",
+      "EXPLICIT",
+      "EXPLICIT_IMAGINE",
+      "EXPLICIT_IMAGINE_ME",
+      "INVISIBLE_WATERMARK",
+      "IPTC",
+      "IPTC_METADATA_EDITED",
+    ]
+
     PICKUP_OPTIONS = [
       "CURBSIDE",
       "IN_STORE",
@@ -98,6 +109,7 @@ module FacebookAds
       "ANALYZE",
       "CASHIER_ROLE",
       "CREATE_CONTENT",
+      "GLOBAL_STRUCTURE_MANAGEMENT",
       "MANAGE",
       "MANAGE_JOBS",
       "MANAGE_LEADS",
@@ -126,6 +138,7 @@ module FacebookAds
       "ANALYZE",
       "CASHIER_ROLE",
       "CREATE_CONTENT",
+      "GLOBAL_STRUCTURE_MANAGEMENT",
       "MANAGE",
       "MANAGE_JOBS",
       "MANAGE_LEADS",
@@ -147,41 +160,6 @@ module FacebookAds
       "PROFILE_PLUS_REVENUE",
       "READ_PAGE_MAILBOXES",
       "VIEW_MONETIZATION_INSIGHTS",
-    ]
-
-    ALIGNMENT = [
-      "LEFT",
-      "RIGHT",
-    ]
-
-    ENTRY_POINT_ICON = [
-      "CHAT_ANGULAR_ICON",
-      "CHAT_ROUND_ICON",
-      "MESSENGER_ICON",
-      "NONE",
-    ]
-
-    ENTRY_POINT_LABEL = [
-      "ASK_US",
-      "CHAT",
-      "HELP",
-      "NONE",
-    ]
-
-    GREETING_DIALOG_DISPLAY = [
-      "HIDE",
-      "SHOW",
-      "WELCOME_MESSAGE",
-    ]
-
-    GUEST_CHAT_MODE = [
-      "DISABLED",
-      "ENABLED",
-    ]
-
-    MOBILE_CHAT_DISPLAY = [
-      "APP_SWITCH",
-      "CHAT_TAB",
     ]
 
     BACKDATED_TIME_GRANULARITY = [
@@ -231,10 +209,15 @@ module FacebookAds
       "SCHEDULED_RECURRING",
     ]
 
+    CATEGORY = [
+      "UTILITY",
+    ]
+
     MESSAGING_TYPE = [
       "MESSAGE_TAG",
       "RESPONSE",
       "UPDATE",
+      "UTILITY",
     ]
 
     NOTIFICATION_TYPE = [
@@ -260,6 +243,14 @@ module FacebookAds
     PLATFORM = [
       "INSTAGRAM",
       "MESSENGER",
+    ]
+
+    ACTIONS = [
+      "BAN_USER",
+      "BLOCK_USER",
+      "MOVE_TO_SPAM",
+      "UNBAN_USER",
+      "UNBLOCK_USER",
     ]
 
     MODEL = [
@@ -298,6 +289,7 @@ module FacebookAds
       "awards",
       "bio",
       "birthday",
+      "call_permission_reply",
       "calls",
       "category",
       "checkins",
@@ -326,6 +318,7 @@ module FacebookAds
       "live_videos",
       "local_delivery",
       "location",
+      "marketing_message_delivery_failed",
       "mcom_invoice_change",
       "members",
       "mention",
@@ -337,6 +330,7 @@ module FacebookAds
       "message_mention",
       "message_reactions",
       "message_reads",
+      "message_template_status_update",
       "messages",
       "messaging_account_linking",
       "messaging_appointments",
@@ -348,6 +342,7 @@ module FacebookAds
       "messaging_game_plays",
       "messaging_handovers",
       "messaging_in_thread_lead_form_submit",
+      "messaging_integrity",
       "messaging_optins",
       "messaging_optouts",
       "messaging_payments",
@@ -357,7 +352,6 @@ module FacebookAds
       "messaging_referrals",
       "mission",
       "name",
-      "otp_verification",
       "page_about_story",
       "page_change_proposal",
       "page_upcoming_change",
@@ -382,14 +376,6 @@ module FacebookAds
       "video_text_question_responses",
       "videos",
       "website",
-    ]
-
-    ACTION = [
-      "SPAM",
-    ]
-
-    ACTION_TYPE = [
-      "REPORT_THREAD",
     ]
 
 
@@ -646,7 +632,7 @@ module FacebookAds
 
     has_edge :calls do |edge|
       edge.post do |api|
-        api.has_param :action, { enum: %w{ACCEPT REJECT TERMINATE }}
+        api.has_param :action, { enum: %w{ACCEPT CONNECT REJECT TERMINATE }}
         api.has_param :call_id, 'string'
         api.has_param :platform, { enum: %w{INSTAGRAM MESSENGER }}
         api.has_param :session, 'hash'
@@ -690,20 +676,6 @@ module FacebookAds
 
     has_edge :chat_plugin do |edge|
       edge.get 'ChatPlugin'
-      edge.post 'Page' do |api|
-        api.has_param :alignment, { enum: -> { Page::ALIGNMENT }}
-        api.has_param :desktop_bottom_spacing, 'int'
-        api.has_param :desktop_side_spacing, 'int'
-        api.has_param :entry_point_icon, { enum: -> { Page::ENTRY_POINT_ICON }}
-        api.has_param :entry_point_label, { enum: -> { Page::ENTRY_POINT_LABEL }}
-        api.has_param :greeting_dialog_display, { enum: -> { Page::GREETING_DIALOG_DISPLAY }}
-        api.has_param :guest_chat_mode, { enum: -> { Page::GUEST_CHAT_MODE }}
-        api.has_param :mobile_bottom_spacing, 'int'
-        api.has_param :mobile_chat_display, { enum: -> { Page::MOBILE_CHAT_DISPLAY }}
-        api.has_param :mobile_side_spacing, 'int'
-        api.has_param :theme_color, 'string'
-        api.has_param :welcome_screen_greeting, 'string'
-      end
     end
 
     has_edge :commerce_merchant_settings do |edge|
@@ -759,6 +731,10 @@ module FacebookAds
       edge.get 'Page'
     end
 
+    has_edge :ctx_optimization_eligibility do |edge|
+      edge.get 'CtxOptimizationEligibility'
+    end
+
     has_edge :custom_labels do |edge|
       edge.get 'PageUserMessageThreadLabel'
       edge.post 'PageUserMessageThreadLabel' do |api|
@@ -782,8 +758,10 @@ module FacebookAds
     end
 
     has_edge :dataset do |edge|
-      edge.get 'AdsPixel'
-      edge.post 'AdsPixel'
+      edge.get 'Dataset'
+      edge.post 'Dataset' do |api|
+        api.has_param :dataset_name, 'string'
+      end
     end
 
     has_edge :events do |edge|
@@ -817,10 +795,9 @@ module FacebookAds
         api.has_param :actions, 'object'
         api.has_param :album_id, 'string'
         api.has_param :android_key_hash, 'string'
-        api.has_param :animated_effect_id, 'int'
         api.has_param :application_id, 'string'
         api.has_param :asked_fun_fact_prompt_id, 'int'
-        api.has_param :asset3d_id, 'int'
+        api.has_param :asset3d_id, 'string'
         api.has_param :associated_id, 'string'
         api.has_param :attach_place_suggestion, 'bool'
         api.has_param :attached_media, { list: 'object' }
@@ -852,10 +829,9 @@ module FacebookAds
         api.has_param :expanded_width, 'int'
         api.has_param :feed_targeting, 'object'
         api.has_param :formatting, { enum: -> { Page::FORMATTING }}
-        api.has_param :fun_fact_prompt_id, 'int'
+        api.has_param :fun_fact_prompt_id, 'string'
         api.has_param :fun_fact_toastee_id, 'int'
         api.has_param :height, 'int'
-        api.has_param :holiday_card, 'string'
         api.has_param :home_checkin_city_id, 'object'
         api.has_param :image_crops, 'hash'
         api.has_param :implicit_with_tags, { list: 'int' }
@@ -876,7 +852,6 @@ module FacebookAds
         api.has_param :name, 'string'
         api.has_param :nectar_module, 'string'
         api.has_param :object_attachment, 'string'
-        api.has_param :offer_like_post_id, 'int'
         api.has_param :og_action_type_id, 'string'
         api.has_param :og_hide_object_attachment, 'bool'
         api.has_param :og_icon_id, 'string'
@@ -914,7 +889,6 @@ module FacebookAds
         api.has_param :text_format_metadata, 'string'
         api.has_param :text_format_preset_id, 'string'
         api.has_param :text_only_place, 'string'
-        api.has_param :throwback_camera_roll_media, 'string'
         api.has_param :thumbnail, 'file'
         api.has_param :time_since_original_post, 'int'
         api.has_param :title, 'string'
@@ -929,13 +903,6 @@ module FacebookAds
 
     has_edge :global_brand_children do |edge|
       edge.get 'Page'
-    end
-
-    has_edge :groups do |edge|
-      edge.get 'Group' do |api|
-        api.has_param :admin_only, 'bool'
-        api.has_param :parent, 'string'
-      end
     end
 
     has_edge :image_copyrights do |edge|
@@ -992,6 +959,7 @@ module FacebookAds
         api.has_param :questions, { list: 'object' }
         api.has_param :thank_you_page, 'object'
         api.has_param :tracking_parameters, 'hash'
+        api.has_param :upload_gated_file, 'file'
       end
     end
 
@@ -1084,6 +1052,29 @@ module FacebookAds
       end
     end
 
+    has_edge :message_templates do |edge|
+      edge.delete do |api|
+        api.has_param :name, 'string'
+        api.has_param :template_id, 'string'
+      end
+      edge.get 'MessengerBusinessTemplate' do |api|
+        api.has_param :category, { list: { enum: -> { Page::CATEGORY }} }
+        api.has_param :content, 'string'
+        api.has_param :language, { list: 'string' }
+        api.has_param :name, 'string'
+        api.has_param :name_or_content, 'string'
+        api.has_param :status, { list: { enum: -> { MessengerBusinessTemplate::STATUS }} }
+      end
+      edge.post 'Page' do |api|
+        api.has_param :category, { enum: -> { Page::CATEGORY }}
+        api.has_param :components, { list: 'hash' }
+        api.has_param :language, 'string'
+        api.has_param :library_template_button_inputs, { list: 'hash' }
+        api.has_param :library_template_name, 'string'
+        api.has_param :name, 'string'
+      end
+    end
+
     has_edge :messages do |edge|
       edge.post 'Page' do |api|
         api.has_param :message, 'object'
@@ -1107,6 +1098,7 @@ module FacebookAds
       edge.get 'MessengerCallSettings'
       edge.post 'Page' do |api|
         api.has_param :audio_enabled, 'bool'
+        api.has_param :icon_enabled, 'bool'
       end
     end
 
@@ -1151,6 +1143,13 @@ module FacebookAds
       end
     end
 
+    has_edge :moderate_conversations do |edge|
+      edge.post 'Page' do |api|
+        api.has_param :actions, { list: { enum: -> { Page::ACTIONS }} }
+        api.has_param :user_ids, { list: 'hash' }
+      end
+    end
+
     has_edge :nlp_configs do |edge|
       edge.post 'Page' do |api|
         api.has_param :api_version, 'object'
@@ -1190,15 +1189,7 @@ module FacebookAds
       edge.post 'Page' do |api|
         api.has_param :metadata, 'string'
         api.has_param :recipient, 'object'
-        api.has_param :target_app_id, 'int'
-      end
-    end
-
-    has_edge :pass_thread_metadata do |edge|
-      edge.post 'Page' do |api|
-        api.has_param :metadata, 'string'
-        api.has_param :recipient, 'object'
-        api.has_param :target_app_id, 'int'
+        api.has_param :target_app_id, 'string'
       end
     end
 
@@ -1261,6 +1252,7 @@ module FacebookAds
         api.has_param :place, 'object'
         api.has_param :privacy, 'string'
         api.has_param :profile_id, 'int'
+        api.has_param :provenance_info, 'hash'
         api.has_param :proxied_app_id, 'string'
         api.has_param :published, 'bool'
         api.has_param :qn, 'string'
@@ -1341,10 +1333,6 @@ module FacebookAds
       end
     end
 
-    has_edge :ratings do |edge|
-      edge.get 'Recommendation'
-    end
-
     has_edge :release_thread_control do |edge|
       edge.post 'Page' do |api|
         api.has_param :recipient, 'object'
@@ -1390,6 +1378,10 @@ module FacebookAds
       edge.get 'CommerceMerchantSettingsSetupStatus'
     end
 
+    has_edge :store_locations do |edge|
+      edge.get 'StoreLocation'
+    end
+
     has_edge :stories do |edge|
       edge.get 'Stories' do |api|
         api.has_param :since, 'datetime'
@@ -1420,14 +1412,6 @@ module FacebookAds
       edge.post 'Page' do |api|
         api.has_param :metadata, 'string'
         api.has_param :recipient, 'object'
-      end
-    end
-
-    has_edge :thread_action do |edge|
-      edge.post 'Page' do |api|
-        api.has_param :action, { enum: -> { Page::ACTION }}
-        api.has_param :action_type, { enum: -> { Page::ACTION_TYPE }}
-        api.has_param :user_id, 'hash'
       end
     end
 
@@ -1523,7 +1507,6 @@ module FacebookAds
       end
       edge.post 'AdVideo' do |api|
         api.has_param :ad_breaks, { list: 'string' }
-        api.has_param :animated_effect_id, 'int'
         api.has_param :application_id, 'string'
         api.has_param :asked_fun_fact_prompt_id, 'int'
         api.has_param :audio_story_wave_animation_handle, 'string'
@@ -1555,11 +1538,10 @@ module FacebookAds
         api.has_param :formatting, { enum: -> { AdVideo::FORMATTING }}
         api.has_param :fov, 'int'
         api.has_param :front_z_rotation, 'double'
-        api.has_param :fun_fact_prompt_id, 'int'
+        api.has_param :fun_fact_prompt_id, 'string'
         api.has_param :fun_fact_toastee_id, 'int'
         api.has_param :guide, { list: { list: 'int' } }
         api.has_param :guide_enabled, 'bool'
-        api.has_param :holiday_card, 'string'
         api.has_param :initial_heading, 'int'
         api.has_param :initial_pitch, 'int'
         api.has_param :instant_game_entry_point_data, 'string'
@@ -1571,7 +1553,6 @@ module FacebookAds
         api.has_param :manual_privacy, 'bool'
         api.has_param :multilingual_data, { list: 'object' }
         api.has_param :no_story, 'bool'
-        api.has_param :offer_like_post_id, 'int'
         api.has_param :og_action_type_id, 'string'
         api.has_param :og_icon_id, 'string'
         api.has_param :og_object_id, 'string'
@@ -1598,7 +1579,6 @@ module FacebookAds
         api.has_param :swap_mode, { enum: -> { AdVideo::SWAP_MODE }}
         api.has_param :targeting, 'object'
         api.has_param :text_format_metadata, 'string'
-        api.has_param :throwback_camera_roll_media, 'string'
         api.has_param :thumb, 'file'
         api.has_param :time_since_original_post, 'int'
         api.has_param :title, 'string'
@@ -1634,7 +1614,7 @@ module FacebookAds
         api.has_param :flow_id, 'string'
       end
       edge.post do |api|
-        api.has_param :eligible_platforms, { list: { enum: %w{INSTAGRAM MESSENGER }} }
+        api.has_param :eligible_platforms, { list: { enum: %w{INSTAGRAM MESSENGER WHATSAPP }} }
         api.has_param :flow_id, 'string'
         api.has_param :name, 'string'
         api.has_param :welcome_message_flow, { list: 'object' }
