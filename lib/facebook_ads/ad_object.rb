@@ -5,10 +5,10 @@
 # LICENSE file in the root directory of this source tree.
 
 require 'json'
-require 'facebook_ads/api_request'
-require 'facebook_ads/api_response'
-require 'facebook_ads/helpers/node_helpers'
-require 'facebook_ads/helpers/edge_helpers'
+require_relative 'api_request'
+require_relative 'api_response'
+require_relative 'helpers/node_helpers'
+require_relative 'helpers/edge_helpers'
 
 module FacebookAds
   class AdObject

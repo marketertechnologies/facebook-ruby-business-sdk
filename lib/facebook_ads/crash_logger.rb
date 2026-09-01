@@ -4,8 +4,8 @@
 # This source code is licensed under the license found in the
 # LICENSE file in the root directory of this source tree.
 
-require 'facebook_ads/api_request'
-require 'facebook_ads/api_response'
+require_relative 'api_request'
+require_relative 'api_response'
 
 module FacebookAds
   class CrashLogger

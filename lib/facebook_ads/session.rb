@@ -6,7 +6,7 @@
 
 require 'openssl'
 require 'logger'
-require 'facebook_ads/videos/video_request'
+require_relative 'videos/video_request'
 
 module FacebookAds
   class Session
